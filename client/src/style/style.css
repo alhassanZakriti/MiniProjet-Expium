@@ -112,4 +112,118 @@
 .primary-text {
   color: #004fff;
   font-weight: 700;
+}
+
+@media only screen and (max-width: 900px) {
+  .landing-page .hero-right {
+    display: none;
+  }
+  .landing-page .split {
+    display: flex;
+    justify-content: center;
+  }
+}
+.horizontal-logo {
+  display: flex;
+  vertical-align: middle;
+}
+.horizontal-logo img {
+  width: 3.5em;
+}
+.horizontal-logo span {
+  font-style: italic;
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #004fff;
+}
+
+.flexing {
+  display: flex;
+  align-items: center;
+  padding: 1em;
+  padding-left: 2.5em;
+}
+.flexing svg {
+  opacity: 0.5;
+}
+.flexing h3 {
+  font-size: 1.2rem;
+  margin-left: 1.5em;
+  font-weight: 700;
+  color: rgba(86, 86, 86, 0.639);
+}
+
+.flexing:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.menu {
+  width: 16vw;
+  background-color: white;
+  border-radius: 30px;
+  box-shadow: 0px 5px 50px rgba(0, 0, 0, 0.0745098039);
+  padding: 2em;
+  height: 70vh;
+  text-align: left;
+}
+
+.left-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 20vw;
+  padding: 1em;
+}
+.left-side .horizontal-logo {
+  margin: 1em auto;
+}
+
+.layout {
+  display: flex;
+  justify-content: space-between;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em 5vw;
+}
+
+.search-bar {
+  width: 40vw;
+  padding: 0.4em;
+  background-color: white;
+  box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.057);
+  display: flex;
+  justify-content: space-between;
+  border-radius: 20px;
+  padding: 0.6em;
+}
+.search-bar .input-search {
+  width: 60vw;
+  padding-left: 1em;
+}
+.search-bar .search-btn {
+  all: unset;
+  background-color: #004fff;
+  border-radius: 10px;
+  padding: 0.8em;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.search-bar .search-btn svg {
+  width: 20px;
+}
+
+.top-left {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.top-left img {
+  border-radius: 10px;
+  margin-inline: 2em;
 }/*# sourceMappingURL=style.css.map */
