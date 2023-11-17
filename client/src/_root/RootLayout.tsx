@@ -1,10 +1,11 @@
 import { Navigate, Outlet } from "react-router-dom"
 import Menu from "../components/Menu"
 import Logo from "../components/Logo"
-import NewFriends from "../components/NewFriends"
 import SearchBar from "../components/SearchBar"
 import Greeting from "../components/Greeting"
 import profile from "../assets/profile.png"
+import AddFriends from "../components/AddFriends"
+
 
 const RootLayout = () => {
 
@@ -27,10 +28,7 @@ const RootLayout = () => {
               </div>
               
               <Outlet />
-              <div className="right-side">
-                
-                <NewFriends />
-              </div>
+              <AddFriends />
             </div>
           </section>
         ):(

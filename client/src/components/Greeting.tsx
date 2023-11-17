@@ -3,9 +3,9 @@ import { Link } from "react-router-dom"
 const Greeting = (props:any) => {
   return (
     <div className="top-left">
-        <h1>
+        <h2>
             Hey, {props.MyName}!
-        </h1>
+        </h2>
         <Link to="/profile">
             <img src={props.MyPfp} alt="profile picture" />
         </Link>

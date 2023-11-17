@@ -222,4 +222,40 @@ header{
         border-radius: 10px;
         margin-inline: 2em;
     }
+}.add-friend{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1em;
+    svg{
+        background-color: #004fff;
+        border-radius: 10px;
+        fill: white;
+        padding: .4em;
+        margin-left: 2em;
+        cursor: pointer;
+        border: 2px solid #0051ff00;
+    }   
+    svg:hover{
+        border: 2px solid #0051ff51;
+    }
+}
+
+.profile-pic{
+    border-radius: 10px;
+    margin-right: 1em;
+    width: 3em;
+    height: 3em;
+    object-fit: cover;
+}
+.name-area{
+    font-size: 1.3rem;
+    color: rgba(0, 0, 0, 0.751);
+}
+.right-side{
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.066);
+    padding: 2em;
+    margin-right: 1.5em;
 }
