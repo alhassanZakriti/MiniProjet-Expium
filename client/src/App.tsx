@@ -13,6 +13,7 @@ import Profile from './_root/pages/Profile';
 import Preloader from "./components/Preloader";
 import CreatePost from "./_root/pages/CreatePost";
 import InsideChat from "./_root/pages/InsideChat";
+import Settings from "./_root/pages/Settings";
 
 
 
@@ -49,6 +50,7 @@ const App = () => {
                 <Route path='/chat/message' element={<InsideChat />} />
                 <Route path='/friends' element={<Friends />} />
                 <Route path='/profile' element={<Profile />} />
+                <Route path='/settings' element={<Settings />} />
             </Route>
             
         </Routes>

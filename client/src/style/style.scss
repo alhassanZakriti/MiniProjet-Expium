@@ -602,8 +602,10 @@ header{
           }
         textarea{
             all: unset;
-            
-            overflow: wrap;
+            overflow: hidden;
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis;
             max-width: 40vw;
             height: 10em;
             padding: 1em;
@@ -661,6 +663,83 @@ header{
     z-index: 2;
     
 }
+.profile{
+    width: 50vw;
+    overflow: scroll;
+    height: 91vh;
+    .posts{
+        width: 100%;
+        margin-block: 2em;
+        .btns{
+            display: flex;
+
+            justify-content: space-around;
+            button{
+                all: unset;
+                cursor: pointer;
+                font-weight: 700;
+    
+            }
+        }
+    }
+    .pic-name{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        .flex-name-follow{
+            display: flex;
+            justify-content: space-between;
+        }
+        .profile-picture{
+            height: 6em;
+            width: 6em;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+        .name-with-user{
+            font-size: 1.5rem;
+            h3{
+                margin-top: 1em;
+            }
+            p{
+                font-weight: 600;
+                font-size: 1.3rem;
+            }
+            span{
+                font-size: 1.1rem;
+                font-weight: 500;
+                color: #00000064;
+            }
+        }
+    }
+    .img-follow{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between !important;
+    }
+}
+
+.secondary-btn{
+    all: unset;
+    color: #004fff;
+    border: 2px solid #004fff;
+    font-weight: 600;
+    border-radius: 10px;
+    height: 2.5em;
+    width: 13em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 300ms;
+}
+.secondary-btn:hover{
+    background-color: #004fff;
+    color: white;
+    transition: 300ms;
+}
+
 .btn-primary:hover{
     box-shadow: 0px 0px 20px #0051ff16;
     background-color: #0039b4;
@@ -866,14 +945,15 @@ header{
   
   /* Style the scrollbar thumb */
   ::-webkit-scrollbar-thumb {
-    background-color: #000000;
+    background-color: #0000004e;
     border-radius: 10px;
     transition: 700ms;
+    height: 10px;
+    scrollbar-width: thin;
     cursor: grab;
 
   }
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #003fff;
     transition: 700ms;
   }
   

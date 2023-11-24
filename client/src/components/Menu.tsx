@@ -18,9 +18,9 @@ const Menu = () => {
 
         <h3 className={pathname === "/"? "checked": "unchecked"}>Home</h3>
       </Link>
-      <Link className="flexing" to='/Activities'>
-        <BiSolidNotification className={pathname === "/Activities"? "icon-menu-checked": "icon-menu-unchecked"} />
-        <h3 className={pathname === "/Activities"? "checked": "unchecked"}>Activities</h3>
+      <Link className="flexing" to='/activities'>
+        <BiSolidNotification className={pathname === "/activities"? "icon-menu-checked": "icon-menu-unchecked"} />
+        <h3 className={pathname === "/activities"? "checked": "unchecked"}>Activities</h3>
       </Link>
       <Link className="flexing" to='/post'>
         <BiSolidPlusSquare className={pathname === "/post"? "icon-menu-checked": "icon-menu-unchecked"}/>
@@ -31,16 +31,16 @@ const Menu = () => {
 
         <h3 className={pathname === (("/chat")||("/chat/message"))? "checked": "unchecked"}>Chat</h3>
       </Link>
-      <Link className="flexing" to='/Friends'>
-        <FaUserFriends className={pathname === "/Friends"? "icon-menu-checked": "icon-menu-unchecked"}/>
+      <Link className="flexing" to='/friends'>
+        <FaUserFriends className={pathname === "/friends"? "icon-menu-checked": "icon-menu-unchecked"}/>
 
 
-        <h3 className={pathname === "/Friends"? "checked": "unchecked"}>Friends</h3>
+        <h3 className={pathname === "/friends"? "checked": "unchecked"}>Friends</h3>
       </Link>
-      <Link className="profile-hider flexing" to='/Profile'>
-        <IoMdPerson className={pathname === "/Profile"? "icon-menu-checked ": "icon-menu-unchecked "}/>
+      <Link className="profile-hider flexing" to='/profile'>
+        <IoMdPerson className={pathname === "/profile"? "icon-menu-checked ": "icon-menu-unchecked "}/>
 
-        <h3 className={pathname === "/Profile"? "checked ": "unchecked "}>Profile</h3>
+        <h3 className={pathname === "/profile"? "checked ": "unchecked "}>Profile</h3>
       </Link>
 
     </div>
