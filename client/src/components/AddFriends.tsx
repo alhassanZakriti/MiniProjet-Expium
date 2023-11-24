@@ -5,10 +5,7 @@ const AddFriends = () => {
   return (
     <div className="right-side">
         <h1>Add New Friends</h1>
-      <AddFriend profile={profile} username="alhassan.zakriti" firstName="Al Hassan" lastName="Zakriti" />
-      <AddFriend profile={profile} username="alhassan.zakriti" firstName="Al Hassan" lastName="Zakriti" />
-      <AddFriend profile={profile} username="alhassan.zakriti" firstName="Al Hassan" lastName="Zakriti" />
-      <AddFriend profile={profile} username="alhassan.zakriti" firstName="Al Hassan" lastName="Zakriti" />
+      <AddFriend profile={profile} username="eric.garcia" firstName="Eric" lastName="Garcia" />
     </div>
   )
 }

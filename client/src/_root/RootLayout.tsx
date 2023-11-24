@@ -4,6 +4,7 @@ import Logo from "../components/Logo"
 import SearchBar from "../components/SearchBar"
 import Greeting from "../components/Greeting"
 import profile from "../assets/profile.png"
+import background from "../assets/behindGrad.jpg"
 import AddFriends from "../components/AddFriends"
 
 
@@ -15,8 +16,9 @@ const RootLayout = () => {
       {
         isAuthenticated?
         (
+          
           <section>
-            <header>
+            <header className="header">
               <Logo style='horizontal-logo' Name='Expium'/> 
               <SearchBar/>
               <Greeting MyName="Erik" MyPfp={profile}/>
