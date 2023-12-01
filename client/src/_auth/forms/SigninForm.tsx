@@ -10,7 +10,7 @@ const SigninForm = () => {
   const { register, handleSubmit } = useForm()
 
   const submitForm = (data:any) => {
-    console.log(data.userName)
+    console.log("username is: " + data.userName)
   }
   
   const [isVisible,setIsVisible] = useState(false)

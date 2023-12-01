@@ -27,9 +27,9 @@ const Menu = () => {
         <h3 className={pathname === "/post"? "checked": "unchecked"}>Post</h3>
       </Link>
       <Link className="flexing" to='/chat'>
-        <MdOutlineChatBubble className={pathname === (("/chat")||("/chat/message"))? "icon-menu-checked": "icon-menu-unchecked"}/>
+        <MdOutlineChatBubble className={(pathname === (("/chat")) || (pathname ===  ("/chat/message")))? "icon-menu-checked": "icon-menu-unchecked"}/>
 
-        <h3 className={pathname === (("/chat")||("/chat/message"))? "checked": "unchecked"}>Chat</h3>
+        <h3 className={(pathname === (("/chat")) || (pathname ===  ("/chat/message")))? "checked": "unchecked"}>Chat</h3>
       </Link>
       <Link className="flexing" to='/friends'>
         <FaUserFriends className={pathname === "/friends"? "icon-menu-checked": "icon-menu-unchecked"}/>

@@ -1,8 +1,5 @@
 import '../style/style.css'
-import SigninForm from "./forms/SigninForm"
 import { Outlet, Navigate } from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
-import SignupForm from "./forms/SignupForm";
 import heroPic from "../assets/heroPic.png"
 import behind from "../assets/behindGrad.jpg"
 

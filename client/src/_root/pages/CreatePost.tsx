@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 
 
 
@@ -34,7 +35,6 @@ const CreatePost = () => {
             <h4>Attachement</h4>
             <div className="file-input">
               {!imageUrl &&(<div className="input-container">
-
                 <input type="file" id="imageInput" ref={imageRef} onChange={handleImageChange} />
               </div>)}
               {imageUrl && <img src={imageUrl} className='picture-imported' alt="Imported Image" ref={imageRef} />}
