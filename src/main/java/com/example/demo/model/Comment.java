@@ -13,5 +13,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @Document
 public class Comment {
+    
     private String commentContent;
 }
