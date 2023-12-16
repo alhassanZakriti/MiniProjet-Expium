@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.model.Image;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepo;
+import com.example.demo.service.tools.ImageUtils;
 
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -69,12 +70,19 @@ public class UserService {
         //Password
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
         user.setPassword(hashedPassword);
+        user.setStatus(com.example.demo.service.tools.Status.ONLINE);
 
         userRepo.save(user);
 
         return "User added successfully";
     }
     /* *********************************** Add User method Ends here *********************************** */
+
+
+    //To Find All connected Users
+    public List<User> findConnectedUsers() {
+        return userRepo.findAllByStatus(com.example.demo.service.tools.Status.ONLINE);
+    }
 
 
     /*********************************************************************************************************** */

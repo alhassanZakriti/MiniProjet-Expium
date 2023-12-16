@@ -13,6 +13,7 @@ import com.example.demo.model.Image;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;
 import com.example.demo.repository.PostRepo;
+import com.example.demo.service.tools.ImageUtils;
 
 @Service
 public class PostService {

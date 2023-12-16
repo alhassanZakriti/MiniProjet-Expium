@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -12,4 +13,6 @@ public interface UserRepo extends MongoRepository<User,String>{
 
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
+
+    List<User> findAllByStatus(com.example.demo.service.tools.Status status);
 }

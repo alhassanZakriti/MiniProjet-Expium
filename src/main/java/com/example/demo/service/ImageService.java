@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.model.Image;
 import com.example.demo.repository.ImageRepo;
+import com.example.demo.service.tools.ImageUtils;
 
 @Service
 public class ImageService {
