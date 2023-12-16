@@ -31,7 +31,7 @@ public class User {
     @JsonIgnore
     private Image picture; 
 
-    private com.example.demo.service.tools.Status status;
+    private com.example.demo.service.Status status;
 
 
     @JsonIgnore

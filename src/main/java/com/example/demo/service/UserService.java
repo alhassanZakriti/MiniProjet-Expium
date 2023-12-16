@@ -70,7 +70,7 @@ public class UserService {
         //Password
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
         user.setPassword(hashedPassword);
-        user.setStatus(com.example.demo.service.tools.Status.ONLINE);
+        user.setStatus(com.example.demo.service.Status.ONLINE);
 
         userRepo.save(user);
 
@@ -81,7 +81,7 @@ public class UserService {
 
     //To Find All connected Users
     public List<User> findConnectedUsers() {
-        return userRepo.findAllByStatus(com.example.demo.service.tools.Status.ONLINE);
+        return userRepo.findAllByStatus(com.example.demo.service.Status.ONLINE);
     }
 
 

@@ -14,5 +14,5 @@ public interface UserRepo extends MongoRepository<User,String>{
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
 
-    List<User> findAllByStatus(com.example.demo.service.tools.Status status);
+    List<User> findAllByStatus(com.example.demo.service.Status status);
 }

@@ -61,7 +61,7 @@ public class UserController {
     /*------------------------------------- Get Methods -------------------------------------*/
 
     //Get all Users
-    @GetMapping("/users")
+    @GetMapping("/all-users")
     public ResponseEntity<List<User>> findAll() {
         List<User> users = userService.findAll().getBody(); 
     
