@@ -5,7 +5,7 @@ import bg from '../../assets/bg.jpg'
 
 const Activities = () => {
   return (
-    <div className="center">
+    <div className="center content-area">
       <h1>Activities</h1>
       <Activity profile={profile} username="lampard.stan" status="upvote"/>
       <Activity profile={bg} username="the.cure" status="no"/>

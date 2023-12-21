@@ -10,13 +10,13 @@ const CreatePost = () => {
   const [imageUrl, setImageUrl] = useState(''); // useState to store the image URL
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const selectedFile: File | null = event.target.files[0];
+    const selectedFile: File | null = event.target.files![0];
   
     if (selectedFile) {
       const reader: FileReader = new FileReader();
   
       reader.onload = (event: ProgressEvent<FileReader>): void => {
-        const imageData: string = event.target.result as string;
+        const imageData: string = event.target!.result as string;
   
         setImageUrl(imageData); // Update the image URL
       };
@@ -25,7 +25,7 @@ const CreatePost = () => {
     }
   };
   return (
-    <div className="create" id="newPost">
+    <div className="create center content-area" id="newPost">
         <div className="headline">
           <h2>Add new post</h2>
         </div>
@@ -35,6 +35,10 @@ const CreatePost = () => {
             <h4>Attachement</h4>
             <div className="file-input">
               {!imageUrl &&(<div className="input-container">
+                <div className="upload-area">
+                  <MdOutlineAddPhotoAlternate className="upload-img"/>
+                  <span>Upload an image</span>
+                </div>
                 <input type="file" id="imageInput" ref={imageRef} onChange={handleImageChange} />
               </div>)}
               {imageUrl && <img src={imageUrl} className='picture-imported' alt="Imported Image" ref={imageRef} />}

@@ -15,6 +15,7 @@ import CreatePost from "./_root/pages/CreatePost";
 import InsideChat from "./_root/pages/InsideChat";
 import Settings from "./_root/pages/Settings";
 import Search from "./_root/pages/Search";
+import InsidePost from "./_root/pages/InsidePost";
 
 
 
@@ -46,13 +47,14 @@ const App = () => {
             <Route element={<RootLayout />}>
                 <Route index element={<Home />} />
                 <Route path='/activities' element={<Activities />} />
-                <Route path='/post' element={<CreatePost />} />
+                <Route path='/add-post' element={<CreatePost />} />
                 <Route path='/chat' element={<Chat />} />
                 <Route path='/chat/message' element={<InsideChat />} />
                 <Route path='/friends' element={<Friends />} />
                 <Route path='/profile' element={<Profile />} />
                 <Route path='/settings' element={<Settings />} />
                 <Route path='/search' element={<Search />} />
+                <Route path='/post' element={<InsidePost />} />
             </Route>
             
         </Routes>

@@ -7,9 +7,9 @@ import CreatePost from "./CreatePost"
 
 const Home = () => {
   return (
-    <div className="center">
+    <div className="center content-area">
       <div className="linkto">
-        <Link to="/post" className="btn-primary merge">Create new post</Link>
+        <Link to="/add-post" className="btn-primary merge">Create new post</Link>
         
       </div>
       <Post username="alhassan.zakriti" firstName="Al Hassan" lastName="Zakriti" profile={Mypic} caption="Hey everybody" isImage="yes" thisImage={Mypic}/>

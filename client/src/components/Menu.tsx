@@ -22,9 +22,9 @@ const Menu = () => {
         <BiSolidNotification className={pathname === "/activities"? "icon-menu-checked": "icon-menu-unchecked"} />
         <h3 className={pathname === "/activities"? "checked": "unchecked"}>Activities</h3>
       </Link>
-      <Link className="flexing" to='/post'>
-        <BiSolidPlusSquare className={pathname === "/post"? "icon-menu-checked": "icon-menu-unchecked"}/>
-        <h3 className={pathname === "/post"? "checked": "unchecked"}>Post</h3>
+      <Link className="flexing" to='/add-post'>
+        <BiSolidPlusSquare className={pathname === "/add-post"? "icon-menu-checked": "icon-menu-unchecked"}/>
+        <h3 className={pathname === "/add-post"? "checked": "unchecked"}>Post</h3>
       </Link>
       <Link className="flexing" to='/chat'>
         <MdOutlineChatBubble className={(pathname === (("/chat")) || (pathname ===  ("/chat/message")))? "icon-menu-checked": "icon-menu-unchecked"}/>

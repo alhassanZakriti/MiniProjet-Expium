@@ -9,7 +9,7 @@ const Profile = () => {
   let lastname="Garcia"
   let username="erik.garcia"
   return (
-    <div className='profile'>
+    <div className='profile content-area center'>
       <div className="pic-name">
         <div className="img-follow">
           <img className='profile-picture' src={profile} alt="porfile-picture" />

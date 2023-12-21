@@ -3,7 +3,7 @@ import profile from "../../assets/profile.png"
 
 const Friends = () => {
   return (
-    <div className="all-friends">
+    <div className="all-friends content-area">
       <Friend profile={profile} userName="as32.ed" firstName="Salvador" lastName="Sebastian" />
       
     </div>

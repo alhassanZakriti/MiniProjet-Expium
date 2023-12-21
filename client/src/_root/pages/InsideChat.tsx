@@ -18,7 +18,7 @@ const InsideChat = () => {
   }
 
   return (
-    <div className="layout-chat">
+    <div className="layout-chat content-area">
       <div className="head-chat flex">
         <Link to='/chat' className="overIcon">
           <IoIosArrowBack className="icon"/>

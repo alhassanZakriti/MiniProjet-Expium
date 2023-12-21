@@ -71,9 +71,18 @@
                     
                 }
             }
+            .input-area:hover{
+                border: 2px solid rgba(0, 0, 8, 0.377);
+            }
         }
     }
 
+}
+.input-area:hover{
+    border: 2px solid rgba(0, 0, 8, 0.377) !important;
+}
+.input-area:focus{
+    border: 2px solid #0051ff73 !important;
 }
 .layout-chat{
     height: 83vh;
@@ -81,7 +90,7 @@
     align-content: space-between;
     .messages{
         height: 65vh;
-        width: 50vw;
+        width: 100%;
         overflow: scroll;
         display: flex;
         flex-direction: column;
@@ -207,6 +216,8 @@
         color: #004fff;
     }
 }
+
+
 .flexing{
     display: flex;
     align-items: center;
@@ -306,7 +317,8 @@ header{
         height: 2.5em;
         object-fit: cover;
     }
-}.add-friend{
+}
+.add-friend{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -350,6 +362,9 @@ header{
 .center{
 
     height: 87vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     overflow-y: scroll;
     // padding: .7em;
 }
@@ -385,18 +400,20 @@ header{
 .head-chat{
     align-items: center;
     justify-content: flex-start;
-    width: 50vw;
+    
     background-color: #fff;
     .overIcon{
         display: flex;
         justify-content: center;
         margin-right: 1em;
     }
+    h2{
+        font-size: 1.2rem !important;
+    }
     .uncolor{
         color: rgba(0, 0, 0, 0.76);
         align-items: center;
         padding: .3em;
-        width: 30vw;
         padding-right: 2em;
         border-radius: 10px;
         h2{
@@ -524,7 +541,7 @@ header{
     width: 45vw;
     border-bottom: 2px solid rgba(0, 0, 0, 0.062);
     // border-radius: 20px;
-    margin-bottom: 1em;
+    margin-top: 1em;
     .post-picture{
         width: 43vw;
         max-height: 28em;
@@ -554,7 +571,6 @@ header{
         font-weight: 500;
     }
 }
-
 
 .icon-menu-unchecked{
     fill: #0051ff4a !important;
@@ -609,6 +625,29 @@ header{
     }
 
 }
+
+.disabled-btn{
+    background-color: #ababab;
+    border: none;
+    padding: .8em 3em;
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    width: 21em;
+    border-radius: 10px;
+    cursor: progress;
+    
+}
+
+.error-msg{
+    color: rgb(216, 15, 15);
+    max-width: 20em;
+    text-align: left;
+    font-weight: 500;
+    margin-bottom: .5em;
+
+}
+
 /* Style the scrollbar track */
 ::-webkit-scrollbar {
     width: 10px;
@@ -628,7 +667,6 @@ header{
     border-radius: 20px;
     width: 40vw;
     margin: 0px auto;
-    height: 20em;
     margin-bottom: 1em;
     .headline{
         display: flex;
@@ -642,7 +680,7 @@ header{
         flex-direction: column;
         h4{
             margin: 1em 0em .4em 0em;
-       
+        }
         .file-input {
             display: flex;
             border: 3px solid #00000008;
@@ -655,6 +693,28 @@ header{
                 width: 40em;
                 height: 20em;
                 object-fit: cover;
+                
+            }
+
+            .upload-area{
+                position: absolute;
+                margin-top: 3vw;
+                margin-left: 15vw;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                span{
+                    margin-top: .5em;
+                    font-weight: 600;
+                    color: #00000029;
+                }
+            }
+
+            .upload-img{
+                width: 3em;
+                height: 3em;
+                fill: #00000029;
                 
             }
             
@@ -797,6 +857,7 @@ header{
     }
     .pic-name{
         display: flex;
+        width: 45vw;
         flex-direction: column;
         align-items: flex-start;
         .flex-name-follow{
@@ -834,7 +895,7 @@ header{
 }
 
 .onPhone-btn{
-    
+    display: none !important;
     background-color: #004fff;
     border-radius: 10px;
     padding: .6em;
@@ -847,7 +908,6 @@ header{
         
         width: 1.4em;
     }
-    display: none ;
 }
 
 .secondary-btn{
@@ -876,6 +936,7 @@ header{
     background-color: #0039b4;
     transition: 700ms;
 }
+
 
 .activity-style{
     width: 45vw;
@@ -923,9 +984,84 @@ header{
         }
     }
 }
+
 .activity-style:hover{
     background-color: #00000006;
     transition: 700ms;
+}
+
+.form-edit{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .pic{
+        cursor: pointer;
+        width: 5em;
+        height: 5em;
+        border-radius: 10px;
+        .pic-edit{
+            height: 5em;
+            width: 5em;
+            border-radius: 10px;
+            position: absolute;
+            object-fit: cover;
+            z-index: -2;
+            cursor: pointer;
+        }
+        .icon-upload{
+            z-index: 2;
+            position: absolute;
+            background-color: #0051ff31;
+            padding: 1em;
+            height: 3em;
+            color: white;
+            width: 3em;
+            border-radius: 10px;
+        }
+        input[type="file"]{
+            opacity: 0;
+            width: 5em;
+
+            z-index: 10;
+            height: 5em;
+            position: absolute;
+            cursor: pointer;
+        }
+    }
+    .input-area{
+        border: 2px solid #00000014;
+        padding: .7em 1em;
+        margin-block: .4em;
+        width: 19em;
+        border-radius: 10px;
+        display: flex;
+        background-color: #c5c5c508;
+        justify-content: space-between;
+    }
+}
+.content-area{
+    width: 100% !important;
+    padding-inline: 1em;
+}
+
+.btn-secondary{
+    all: unset;
+    color: #cb0b0b;
+    border: 2px solid #cb0b0b;
+    height: 2.5em;
+    width: 21em;
+    border-radius: 10px;
+    align-self: center;
+    text-align: center;
+    font-weight: 700;
+    margin-block: .5em;
+    cursor: pointer;
+    transition: 300ms;
+}
+.btn-secondary:hover{
+    background-color: #cb0b0b ;
+    color: white;
+    transition: 300ms;
 }
 
 @media only screen and (max-width: 1200px) {
@@ -940,6 +1076,9 @@ header{
             }
         }
     }
+    .pic-name{
+        width: 70vw !important;
+    }
 
     .post-style{
         width: 70vw;
@@ -952,13 +1091,17 @@ header{
     body{
         overflow-x: hidden;
     }
+
     .left-side{
         padding: 0;
         margin: 0;
     }
     .onPhone-btn{
-        display: flex;
+        display: flex !important;
 
+    }
+    .pic-name{
+        width: 96vw !important;
     }
 
     .menu{
@@ -1025,14 +1168,19 @@ header{
     }
 
     .form-post{
-        width: 80vw;
-    }
-    .create{
-        width: 80vw;
+        width: 80vw !important;
         textarea{
-            width: 70vw;
+            max-width: 100% !important;
         }
     }
+    .create{
+        width: 80vw !important;
+        textarea{
+            width: 90vw;
+        }
+        
+    }
+
     .center{
         margin-bottom: 3em;
         width: 100vw;
