@@ -18,6 +18,18 @@ import Search from "./_root/pages/Search";
 import InsidePost from "./_root/pages/InsidePost";
 
 
+export interface User {
+  name: string;
+  username: string;
+  password: string;
+  email: string;
+  profilePicture: string;
+  followers: number;
+  following: number;
+  
+}
+
+
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -30,6 +42,7 @@ const App = () => {
   }, []);
   return (
     <div>
+      <
       {isLoading && <Preloader />}
       <main>
         

@@ -11,6 +11,9 @@ import { MdOutlineMoreHoriz } from "react-icons/md";
 
 const Post = (props:any) => {
 
+
+    
+
     const [isUp,setIsUp]= useState(false);
     const [isSaved,setIsSaved]= useState(false);
     

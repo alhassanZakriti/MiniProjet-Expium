@@ -60,6 +60,7 @@
   padding-left: 1em;
   font-weight: 500;
   font-size: 1rem;
+  border: 2px solid rgba(0, 0, 0, 0);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -73,7 +74,7 @@
   vertical-align: middle;
 }
 .landing-page .split .hero-left .input-area:hover {
-  border: 2px solid rgba(0, 0, 8, 0.377);
+  border: 2px solid rgba(0, 0, 8, 0.3764705882);
 }
 
 .input-area:hover {
@@ -314,6 +315,15 @@ header {
      object-fit: cover;
 }
 
+.empty-page {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: rgba(16, 16, 16, 0.5803921569);
+  margin: 0px auto;
+  text-align: center;
+  margin-top: 2em;
+}
+
 .add-friend {
   display: flex;
   justify-content: space-between;
@@ -392,6 +402,9 @@ header {
   border-radius: 20px;
   padding: 0em 2em;
   margin-right: 1.5em;
+  max-height: 85vh !important;
+  overflow-y: scroll;
+  width: 40em;
 }
 
 .flex {
@@ -1148,7 +1161,7 @@ header {
 }
 /* Style the scrollbar thumb */
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.3058823529);
+  background-color: rgba(0, 0, 0, 0.9215686275);
   border-radius: 10px;
   -webkit-transition: 700ms;
   transition: 700ms;

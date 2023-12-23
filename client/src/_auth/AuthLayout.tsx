@@ -2,12 +2,13 @@ import '../style/style.css'
 import { Outlet, Navigate } from "react-router-dom";
 import heroPic from "../assets/heroPic.png"
 import behind from "../assets/behindGrad.jpg"
+import { useRef, useState } from 'react';
 
 
 const AuthLayout = () => {
 
   // const [signin, setSignin] = useState(false);
-  const isAuthenticated = false;
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
 
