@@ -1,1 +1,1 @@
-This readme file will be updated soon!
+#See the main branch for more informations!
