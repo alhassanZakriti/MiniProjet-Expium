@@ -34,12 +34,22 @@ public class User {
     private com.example.demo.service.Status status;
 
 
+
     @JsonIgnore
     @DBRef
     private List<User> friendships;
 
+    @JsonIgnore
+    @DBRef
+    private List<Post> posts;
+
     public User() {
         this.friendships = new ArrayList<>();
+        this.posts = new ArrayList<>();
+    }
+
+    public void addPost(Post post) {
+        this.posts.add(post);
     }
 
     public void removeFriend(User friend) {
@@ -53,7 +63,5 @@ public class User {
         User user = (User) o;
         return Objects.equals(username, user.username);
     }
-
-    //User have multi posts
-    private List<Post> posts;
+    
 }

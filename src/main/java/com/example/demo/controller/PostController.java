@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,18 +43,20 @@ public class PostController {
         @RequestParam("picture") MultipartFile file,
         @RequestParam("content") String content
     ) throws IOException {
-        User user = userRepo.findByUsername(username).get();
+        User user = userRepo.findByUsername(username).orElse(null);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
         Post post = Post.builder().content(content).build();
         postService.createPost(post, user, file);
+        user.addPost(post);
+        userRepo.save(user);
+
         return ResponseEntity.ok("Posted");
     }
-
-    @GetMapping("/list")
-    public ResponseEntity<List<Post>> listPosts() {
-        // Implementation
-        return null;
-    }
-
+    
+    
     @GetMapping("/for-friends")
     public List<Post> getPostsForFriends(User currentUser, List<User> friends) {
         List<Post> friendPosts = new ArrayList<>();
