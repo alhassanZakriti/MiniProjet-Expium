@@ -23,7 +23,7 @@ import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:5173/")
 @RequestMapping("/user")
 public class UserController {
     /*------------------------------------- Services -------------------------------------*/
@@ -33,28 +33,6 @@ public class UserController {
     /*@Autowired
     private ImageService imageService;*/
 
-    /*------------------------------------- WebSocket Methods -------------------------------------*/
-
-
-    @MessageMapping("/user.addUser")
-    @SendTo("/public")
-    public User addUser(@Payload User user) {
-        Optional<User> userOptional = userService.findByUsername(user.getUsername());
-
-        if (userOptional.isPresent()) {
-            return userOptional.get();
-        } else {
-            // Handle the case where the user is not found
-            // You might want to create a new user, log an error, or return an error response
-            return null; // or throw an exception, depending on your requirements
-        }
-    }
-
-
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> findConnectedUsers() {
-        return ResponseEntity.ok(userService.findConnectedUsers());
-    }
 
 
 
