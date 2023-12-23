@@ -25,7 +25,7 @@ import com.example.demo.service.PostService;
 @RequestMapping("/user/post")
 public class PostController {
 
-    @Autowired
+    @Autowired 
     private PostService postService;
     @Autowired
     private UserRepo userRepo;
