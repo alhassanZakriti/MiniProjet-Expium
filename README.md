@@ -74,9 +74,11 @@ Please feel free to reach out with any questions or feedback regarding the proje
 - GitHub: @alhassanZakriti
 - Email: zakriti.alhassan1@gmail.com
 
+
 - Name: Ayoub Brahim Hennani
 - GitHub: @Ay-hen
 - Email: hennani.2020@gmail.com
+
 
 - Name: Achraf Tsouli
 - GitHub: @AchrafTsouli
