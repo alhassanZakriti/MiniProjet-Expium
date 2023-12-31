@@ -3,6 +3,8 @@ package com.example.demo.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,19 +22,48 @@ public class PostService {
     @Autowired
     private PostRepo repo;
 
+
+    String postId = UUID.randomUUID().toString();
+
     //Create new Post
     public Post createPost(Post post, User user, MultipartFile file) throws IOException{
-        Image image = Image.builder()
-        .type(file.getContentType())
-        .picture(ImageUtils.compressImage(file.getBytes()))
-        .build();
+        if (file != null){
+            Image image = Image.builder()
+            .type(file.getContentType())
+            .picture(ImageUtils.compressImage(file.getBytes()))
+            .build();
 
-        post.setPostImage(image);
-        post.setComments(null);
-        post.setUser(user);
+            
+
+            post.setIdPost(postId);
+
+            post.setPostImage(image);
+            post.setComments(null);
+            post.setUser(user);
+        } else {
+            post.setIdPost(postId);
+            post.setComments(null);
+            post.setUser(user);
+        }
 
         return repo.save(post);
     }
+
+
+    //Tryyyyyyyyyyyyyyyyyyyyyyyyyyyy
+    public byte[] showPostImage(String postId) {
+        Optional<Post> postOptional = repo.findById(postId);
+    
+        if (postOptional.isPresent()) {
+            Post post = postOptional.get();
+            if (post.getPostImage() != null) {
+                return ImageUtils.decompressImage(post.getPostImage().getPicture());
+            }
+        }
+    
+        return new byte[0]; // Handle the case where the post is not found or has no image
+    }
+
 
     //Getting list pf post of an user
     public ResponseEntity<List<Post>> getPosts(User user){

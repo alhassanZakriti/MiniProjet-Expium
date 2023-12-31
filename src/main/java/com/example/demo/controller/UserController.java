@@ -1,7 +1,11 @@
 package com.example.demo.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -16,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.model.Post;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
+import com.example.demo.service.tools.ImageUtils;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173/")
@@ -66,36 +72,7 @@ public class UserController {
     
     /*------------------------------------- Post Methods -------------------------------------*/
 
-    //Sign up
-    @PostMapping("/signup")
-    public String addUser(
-        @RequestParam(value = "username") String username,
-        @RequestParam(value = "password") String password,
-        @RequestParam(value = "email") String email,
-        @RequestParam(value = "name") String name) throws IOException {
-
-        User user = User.builder()
-                .username(username)
-                .name(name)
-                .email(email)
-                .password(password)
-                .build();
-
-        return userService.addUser(user);
-    }
-
-    //Login
-    @PostMapping("/login")
-    public ResponseEntity<?> login(
-        @RequestParam(value = "username") String username,
-        @RequestParam(value = "password") String password
-    ){
-        User user = User.builder()
-            .username(username)
-            .password(password)
-            .build();
-        return userService.login(user);
-    }
+    /* Sign-up and login are in Package auth in AuthenticationController */
 
     //upload profile picture for an user
     @PostMapping("/upload-profile-picture")
@@ -131,4 +108,27 @@ public class UserController {
         userService.removeFriend(username,usernameFriend);
         return ResponseEntity.ok("Friend removed successfully");
     }
+
+    @GetMapping("/posts")
+    public ResponseEntity<List<Map<String, Object>>> findPosts(@RequestParam("username") String username) {
+        List<Post> posts = userService.findPostsUser(username);
+
+        List<Map<String, Object>> postDetails = new ArrayList<>();
+
+        for (Post post : posts) {
+            Map<String, Object> postInfo = new HashMap<>();
+            postInfo.put("content", post.getContent());
+
+            if (post.getPostImage() != null) {
+                byte[] uncompressedImage = ImageUtils.decompressImage(post.getPostImage().getPicture());
+                String base64Image = Base64.getEncoder().encodeToString(uncompressedImage);
+                postInfo.put("postImage", base64Image);
+            }
+
+            postDetails.add(postInfo);
+        }
+
+        return ResponseEntity.ok(postDetails);
+    }
+
 }

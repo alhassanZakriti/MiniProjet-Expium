@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.model.Image;
+import com.example.demo.model.Post;
 import com.example.demo.model.User;
+import com.example.demo.repository.PostRepo;
 import com.example.demo.repository.UserRepo;
 import com.example.demo.service.tools.ImageUtils;
 
@@ -26,6 +28,11 @@ public class UserService {
 
     @Autowired
     ImageService imgService;
+
+    @Autowired
+    PostRepo postRepo;
+
+
 
 
     /* *********************** Upload Image method start here *********************** */
@@ -235,4 +242,14 @@ public class UserService {
 
 
     /* ***----------------------------------------------- Friends Methods End -----------------------------------------------*** */
+
+    /* Try */
+    public List<Post> findPostsUser(String username){
+        User user = userRepo.findByUsername(username).get();
+        List<Post> posts = user.getPosts();
+        //byte[] images = ImageUtils.decompressImage(posts.get);
+        return posts;
+    }
+
+    
 }

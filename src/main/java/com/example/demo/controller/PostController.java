@@ -2,7 +2,10 @@ package com.example.demo.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,7 @@ import com.example.demo.repository.PostRepo;
 import com.example.demo.repository.UserRepo;
 import com.example.demo.service.PostService;
 //import com.example.demo.service.UserService;
+import com.example.demo.service.tools.ImageUtils;
 
 
 @RestController
@@ -40,7 +44,7 @@ public class PostController {
     @PostMapping("/create")
     public ResponseEntity<?> createPost(
         @RequestParam("username") String username,
-        @RequestParam("picture") MultipartFile file,
+        @RequestParam(value = "picture", required = false) MultipartFile file,
         @RequestParam("content") String content
     ) throws IOException {
         User user = userRepo.findByUsername(username).orElse(null);
@@ -55,6 +59,8 @@ public class PostController {
 
         return ResponseEntity.ok("Posted");
     }
+
+    /* *************************************** Showing user posts *************************************** */
     
     
     @GetMapping("/for-friends")
@@ -75,4 +81,26 @@ public class PostController {
     }
 
 
+    @GetMapping("/image")
+    public ResponseEntity<?> showPostImage(@RequestParam("id") String id) {
+    try {
+        Post post = repo.findById(id).get();
+
+        if (post != null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("content", post.getContent());
+
+            if (post.getPostImage() != null) {
+                byte[] uncompressedImage = ImageUtils.decompressImage(post.getPostImage().getPicture());
+                response.put("postImage", Base64.getEncoder().encodeToString(uncompressedImage));
+            }
+
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving post image");
+    }
+}
 }
