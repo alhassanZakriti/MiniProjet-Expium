@@ -1,6 +1,8 @@
 package com.example.demo.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +32,17 @@ public class AuthenticationService {
     private AuthenticationManager authenticationManager;
 
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public ResponseEntity<?> register(RegisterRequest request) {
+
+        if (repo.existsByUsername(request.getUsername())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Username already used");
+        }
+    
+        // Check if email is already taken
+        if (repo.existsByEmail(request.getEmail())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Email already used");
+        }
+
         var user = User.builder()
             .name(request.getName())
             .username(request.getUsername())
@@ -41,9 +53,9 @@ public class AuthenticationService {
 
         repo.save(user);
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
+        return ResponseEntity.ok(AuthenticationResponse.builder()
             .token(jwtToken)
-            .build();
+            .build());
     }
 
 public AuthenticationResponse authenticate(AuthenticationRequest request) {
