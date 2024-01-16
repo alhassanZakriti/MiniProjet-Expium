@@ -9,7 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Role;
+import com.example.demo.model.Token;
 import com.example.demo.model.User;
+import com.example.demo.repository.TokenRepo;
 import com.example.demo.repository.UserRepo;
 import com.example.demo.service.JwtService;
 
@@ -19,6 +21,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthenticationService {
     
+    @Autowired
+    private TokenRepo tokenRepo;
+
     @Autowired
     private UserRepo repo;
 
@@ -43,6 +48,7 @@ public class AuthenticationService {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Email already used");
         }
 
+        
         var user = User.builder()
             .name(request.getName())
             .username(request.getUsername())
@@ -50,22 +56,61 @@ public class AuthenticationService {
             .password(passwordEncoder.encode(request.getPassword()))
             .role(Role.USER)
             .build();
+        
+        var jwtToken = jwtService.generateToken(user);
+
+        Token tk = Token.builder()
+            .token(jwtToken)
+            .expired(false)
+            .build();
+
+        user.setToken(tk);
 
         repo.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        tokenRepo.save(tk);
+
         return ResponseEntity.ok(AuthenticationResponse.builder()
             .token(jwtToken)
             .build());
     }
 
-public AuthenticationResponse authenticate(AuthenticationRequest request) {
-    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-    var user = repo.findByUsername(request.getUsername()).orElseThrow();
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        var user = repo.findByUsername(request.getUsername()).orElseThrow();
+        
+        var jwtToken = jwtService.generateToken(user);
+        Token tk = Token.builder()
+                .token(jwtToken)
+                .expired(false)
+                .build();
+
+        user.setToken(tk);
+        
+        repo.save(user);
+        tokenRepo.save(tk);
+
+        return AuthenticationResponse.builder()
+            .token(jwtToken)
+            .build();
+    }
+
+    public ResponseEntity<?> logout(String username) {
+        var user = repo.findByUsername(username).orElseThrow();
     
-    var jwtToken = jwtService.generateToken(user);
-    return AuthenticationResponse.builder()
-        .token(jwtToken)
-        .build();
-}
+        // Remove the token from the repository
+        Token token = user.getToken();
+        if (token != null) {
+            tokenRepo.delete(token);
+        }
+    
+        // Set user's token to null
+        user.setToken(null);
+    
+        // Save changes to the user
+        repo.save(user);
+    
+        return ResponseEntity.ok("Logged out successfully");
+    }
     
 }
+

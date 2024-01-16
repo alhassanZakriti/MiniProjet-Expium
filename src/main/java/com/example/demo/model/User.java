@@ -41,6 +41,9 @@ public class User implements UserDetails{
 
 
 
+    @DBRef
+    private Token token;
+
     @JsonIgnore
     @DBRef
     private List<User> friendships;

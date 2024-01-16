@@ -64,26 +64,6 @@ public class UserService {
     /*********************************************************************************************************** */
 
 
-    /* *********************************** Add User method start here *********************************** */
-    public String addUser(User user) throws IOException {
-        // Check if the username is already used
-        if (userRepo.existsByUsername(user.getUsername())) {
-            return "Username is already used";
-        }
-        if (userRepo.existsByEmail(user.getEmail())) {
-            return "Email is already used";
-        }
-
-        //Password
-        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
-        user.setPassword(hashedPassword);
-        user.setStatus(com.example.demo.service.Status.ONLINE);
-
-        userRepo.save(user);
-
-        return "User added successfully";
-    }
-    /* *********************************** Add User method Ends here *********************************** */
 
 
     //To Find All connected Users
@@ -95,25 +75,7 @@ public class UserService {
     /*********************************************************************************************************** */
 
 
-    /* *********************************** Login User method Start here *********************************** */
-    public ResponseEntity<?> login(User user) {
-        if (userRepo.existsByUsername(user.getUsername())) {
-            Optional<User> userCheck = userRepo.findByUsername(user.getUsername());
     
-            if (userCheck.isPresent() && BCrypt.checkpw(user.getPassword(), userCheck.get().getPassword())) {
-                
-                return ResponseEntity.ok(userCheck.get());
-            } else {
-                
-                return ResponseEntity.ok("Incorrect password");
-            }
-        } else {
-            
-            return ResponseEntity.ok("Username is not found");
-        }
-    }
-    /* *********************************** Login User method Ends *********************************** */
-
 
     /*********************************************************************************************************** */
 
@@ -214,7 +176,7 @@ public class UserService {
 
     /* *********************************** Showing All Friends method Start *********************************** */
     public ResponseEntity<List<User>> getAllFriends(String username) {
-        Optional<User> userOptional = userRepo.findById(username);
+        Optional<User> userOptional = userRepo.findByUsername(username);
         
         if (userOptional.isPresent()) {
             User user = userOptional.get();

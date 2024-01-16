@@ -6,7 +6,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -69,6 +69,11 @@ public class UserController {
         return userService.getAllFriends(username);
     }
 
+    /* ******************************************************* Getting User information ******************************************************* */
+    @GetMapping("/user-info")
+    public User getInfo(@RequestParam("username") String username){
+        return userService.findByUsername(username).get();
+    }
     
     /*------------------------------------- Post Methods -------------------------------------*/
 
