@@ -213,5 +213,35 @@ public class UserService {
         return posts;
     }
 
-    
+    //-----------------------------------------------------------------------
+
+    public ResponseEntity<String> follow(String username1, String username2) {
+        User user1 = userRepo.findByUsername(username1).orElse(null);
+        User user2 = userRepo.findByUsername(username2).orElse(null);
+
+        if (user1 == null || user2 == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        user1.follow(user2);
+        userRepo.save(user1);
+        userRepo.save(user2);
+
+        return ResponseEntity.ok("User " + username1 + " is now following " + username2);
+    }
+
+    public ResponseEntity<String> unfollow(String username1, String username2) {
+        User user1 = userRepo.findByUsername(username1).orElse(null);
+        User user2 = userRepo.findByUsername(username2).orElse(null);
+
+        if (user1 == null || user2 == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        user1.unfollow(user2);
+        userRepo.save(user1);
+        userRepo.save(user2);
+
+        return ResponseEntity.ok("User " + username1 + " is no longer following " + username2);
+    }
 }

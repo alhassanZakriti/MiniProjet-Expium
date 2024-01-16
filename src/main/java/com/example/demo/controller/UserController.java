@@ -136,4 +136,14 @@ public class UserController {
         return ResponseEntity.ok(postDetails);
     }
 
+    /* Test */
+    @PostMapping("/follow")
+    public ResponseEntity<String> follow(@RequestParam("username1") String username1, @RequestParam("username2") String username2) {
+        return userService.follow(username1, username2);
+    }
+
+    @PostMapping("/unfollow")
+    public ResponseEntity<String> unfollow(@RequestParam("username1") String username1, @RequestParam("username2") String username2) {
+        return userService.unfollow(username1, username2);
+    }
 }

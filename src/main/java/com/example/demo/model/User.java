@@ -52,9 +52,21 @@ public class User implements UserDetails{
     @DBRef
     private List<Post> posts;
 
+    /* test following & followers */
+    @JsonIgnore
+    @DBRef
+    private List<User> followers;
+
+    @JsonIgnore
+    @DBRef
+    private List<User> following;
+    //---------------------------------------
+
     public User() {
         this.friendships = new ArrayList<>();
         this.posts = new ArrayList<>();
+        this.followers = new ArrayList<>();
+        this.following = new ArrayList<>();
     }
 
     public void addPost(Post post) {
@@ -96,6 +108,21 @@ public class User implements UserDetails{
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    //Follower methods
+    public void follow(User userToFollow) {
+        if (!following.contains(userToFollow)) {
+            following.add(userToFollow);
+            userToFollow.getFollowers().add(this);
+        }
+    }
+
+    public void unfollow(User userToUnfollow) {
+        if (following.contains(userToUnfollow)) {
+            following.remove(userToUnfollow);
+            userToUnfollow.getFollowers().remove(this);
+        }
     }
     
 }

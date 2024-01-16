@@ -14,6 +14,7 @@ import com.example.demo.model.User;
 import com.example.demo.repository.TokenRepo;
 import com.example.demo.repository.UserRepo;
 import com.example.demo.service.JwtService;
+import com.example.demo.service.Status;
 
 import lombok.RequiredArgsConstructor;
 
@@ -105,6 +106,9 @@ public class AuthenticationService {
     
         // Set user's token to null
         user.setToken(null);
+
+        //Set user's status OFFLINE
+        user.setStatus(Status.OFFLINE); 
     
         // Save changes to the user
         repo.save(user);
