@@ -5,7 +5,9 @@ import { MdOutlineChatBubble } from "react-icons/md";
 import { FaBookmark } from "react-icons/fa6";
 import { MdOutlineMoreHoriz } from "react-icons/md";
 
+import OutsideClickHandler from 'react-outside-click-handler';
 
+import onClickOutside from 'react-onclickoutside';
 
 
 
@@ -13,10 +15,21 @@ const Post = (props:any) => {
 
 
     
-
+    
     const [isUp,setIsUp]= useState(false);
     const [isSaved,setIsSaved]= useState(false);
+    const [showPopUp, setShowPopUp] = useState(false);
     
+    // if (props.saved === "yes") {
+    //     setIsSaved(true);
+    // } else {
+    //     setIsSaved(false);
+    // }
+
+    
+    const handleClickOutside = () => setShowPopUp(false);
+
+   
   return (
     <div className="post-style">
         <div className="top-post">
@@ -27,7 +40,16 @@ const Post = (props:any) => {
                     <p className="user-area">@{props.username}</p>
                 </div>
             </Link>
-            <MdOutlineMoreHoriz className="three-points"/>
+            <OutsideClickHandler onOutsideClick={() => setShowPopUp(false)}> <button className="three-points" onClick={()=>setShowPopUp(!showPopUp)}><MdOutlineMoreHoriz /></button></OutsideClickHandler>
+            {(showPopUp)? (
+                <div className="back-pop">
+                    <div className="pop-up">
+                        <button className="edit">Edit</button>
+                        <button className="hide">Hide</button>
+                        <button className="delete">Delete</button>
+                    </div>
+                </div>
+            ) : ""  }
         </div>
         <div className="post-content">
             {props.caption}

@@ -535,6 +535,7 @@ header {
 .post-style {
   background-color: white;
   padding: 1em;
+  position: relative;
   width: 45vw;
   border-bottom: 2px solid rgba(0, 0, 0, 0.062);
   margin-top: 1em;
@@ -553,7 +554,10 @@ header {
   align-items: center;
 }
 .post-style .three-points {
+  all: unset;
   size: 4rem;
+  height: 1em;
+  width: 1em;
   color: black;
   cursor: pointer;
   margin-right: 1em;
@@ -562,6 +566,42 @@ header {
 }
 .post-style .three-points:hover {
   background-color: rgba(0, 81, 255, 0.0745098039);
+}
+.post-style .back-pop {
+  background-color: rgba(255, 255, 255, 0.0588235294);
+  border-radius: 10px;
+  z-index: 2;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.post-style .back-pop button {
+  all: unset;
+}
+.post-style .back-pop .pop-up {
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.03);
+}
+.post-style .back-pop .pop-up button {
+  all: unset;
+  color: #1f1f1f;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0.5em;
+  transition: 300ms;
+}
+.post-style .back-pop .pop-up button:hover {
+  color: #004fff;
+  transition: 300ms;
+}
+.post-style .back-pop .pop-up .delete:hover {
+  color: #ff1100;
 }
 .post-style .post-content {
   color: rgba(0, 0, 0, 0.842);
@@ -807,6 +847,33 @@ header {
   position: absolute;
   bottom: 1em;
   z-index: 2;
+}
+
+.btn-log {
+  all: unset;
+  background-color: #cf1309;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1rem;
+  width: 6em;
+  cursor: pointer;
+  padding: 0.5em 2em;
+  border-radius: 10px;
+  transition: 700ms;
+  display: flex;
+  align-items: center;
+  bottom: 0;
+  position: fixed;
+  justify-content: center;
+  margin: 1em auto;
+}
+.btn-log span {
+  margin-right: 0.5em;
+}
+
+.btn-log:hover {
+  background-color: #ff1100;
+  transition: 700ms;
 }
 
 .profile {
@@ -1059,6 +1126,9 @@ header {
 @media only screen and (max-width: 1000px) {
   body {
     overflow-x: hidden;
+  }
+  .btn-log {
+    display: none;
   }
   .left-side {
     padding: 0;

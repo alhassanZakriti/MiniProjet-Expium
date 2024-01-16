@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom"
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 const Greeting = (props:any) => {
+    const { user } = useContext(UserContext);
+
   return (
     <div className="top-left">
         <Link className='onPhone-btn' to="/search">
@@ -9,7 +13,7 @@ const Greeting = (props:any) => {
             </svg>
         </Link>
         <h2>
-            Hey, {props.MyName}!
+            {(user != null && user.name) ? `Hey, ${user.name}!` : ""}
         </h2>
         <Link to="/profile">
             <img src={props.MyPfp} alt="profile picture" />

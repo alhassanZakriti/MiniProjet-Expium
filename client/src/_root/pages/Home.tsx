@@ -15,9 +15,13 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const params = {
+    username: "ayoub",
+  }
+
   useEffect(() => {
     axios
-      .get("http://localhost:8080/user/post/for-friends")
+      .get("http://localhost:8080/user/posts", { params })
       .then((res) => {
         setUsers(res.data);
       })
@@ -45,7 +49,7 @@ const Home = () => {
         <Post
           // key={user.id} // Assuming each user has a unique ID
           profile={profile}
-          firstName={user.name}
+          firstName={user.content}
           lastName=""
           username={user.username}
           caption="This is a post"

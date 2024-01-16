@@ -6,11 +6,18 @@ import { MdOutlineChatBubble } from "react-icons/md";
 import { FaUserFriends } from "react-icons/fa";
 import { IoMdPerson } from "react-icons/io";
 
+import { IoLogOut } from "react-icons/io5";
+
 
 
 const Menu = () => {
   const {pathname} = useLocation();
   
+  const destroyToken = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/sign-in";
+  }
+
   return (
     <div className="menu">
       <Link className="flexing " to='/'>
@@ -42,6 +49,11 @@ const Menu = () => {
 
         <h3 className={pathname === "/profile"? "checked ": "unchecked "}>Profile</h3>
       </Link>
+
+      <button onClick={destroyToken} className="btn-log">
+        <span>Log out</span>
+        <IoLogOut />
+      </button>
 
     </div>
   )
