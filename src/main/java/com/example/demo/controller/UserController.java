@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -99,20 +100,7 @@ public class UserController {
         }
     }
 
-    //Adding friends
-    @PostMapping("/add-friend")
-    public ResponseEntity<String> addFriend(@RequestParam("username1") String username1, @RequestParam("username2") String username2) {
-        userService.addFriend(username1, username2);
-        return ResponseEntity.ok("Friend added successfully");
-    }
-    
 
-    //Removing Friend
-    @PostMapping("/remove-friend")
-    public ResponseEntity<?> removeFriend(@RequestParam("username") String username,@RequestParam("usernameF") String usernameFriend){
-        userService.removeFriend(username,usernameFriend);
-        return ResponseEntity.ok("Friend removed successfully");
-    }
 
     @GetMapping("/posts")
     public ResponseEntity<List<Map<String, Object>>> findPosts(@RequestParam("username") String username) {
@@ -136,7 +124,7 @@ public class UserController {
         return ResponseEntity.ok(postDetails);
     }
 
-    /* Test */
+    
     @PostMapping("/follow")
     public ResponseEntity<String> follow(@RequestParam("username1") String username1, @RequestParam("username2") String username2) {
         return userService.follow(username1, username2);
@@ -146,4 +134,50 @@ public class UserController {
     public ResponseEntity<String> unfollow(@RequestParam("username1") String username1, @RequestParam("username2") String username2) {
         return userService.unfollow(username1, username2);
     }
+
+    @GetMapping("/followingPosts")
+    public ResponseEntity<List<Post>> findFollowingPosts(@RequestParam("username") String username) {
+        List<Post> followingPosts = userService.findFollowingPosts(username);
+
+        if (followingPosts.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(followingPosts);
+    }
+
+
+    //Not tested yet
+    @GetMapping("/filter")
+    public ResponseEntity<?> filterPosts(@RequestParam("username") String username) {
+        try {
+            List<Map<String, Object>> posts = userService.filterPosts(username);
+    
+            if (posts.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No posts found");
+            }
+    
+            return ResponseEntity.ok(posts);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    //suggestion friends
+    @GetMapping("/suggestFriends")
+    public ResponseEntity<?> suggestFriends(@RequestParam("username") String username) {
+        try {
+            List<Map<String, Object>> suggestedFriends = userService.suggestFriends(username);
+
+            if (suggestedFriends.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No suggested friends found");
+            }
+
+            return ResponseEntity.ok(suggestedFriends);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }
+
+

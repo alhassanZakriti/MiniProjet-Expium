@@ -46,7 +46,7 @@ public class User implements UserDetails{
 
     @JsonIgnore
     @DBRef
-    private List<User> friendships;
+    private List<User> friends;
 
     @JsonIgnore
     @DBRef
@@ -63,7 +63,7 @@ public class User implements UserDetails{
     //---------------------------------------
 
     public User() {
-        this.friendships = new ArrayList<>();
+        this.friends = new ArrayList<>();
         this.posts = new ArrayList<>();
         this.followers = new ArrayList<>();
         this.following = new ArrayList<>();
@@ -74,7 +74,7 @@ public class User implements UserDetails{
     }
 
     public void removeFriend(User friend) {
-        friendships.remove(friend);
+        friends.remove(friend);
     }
 
     @Override

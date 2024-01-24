@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,16 +28,15 @@ public class PostService {
 
     //Create new Post
     public Post createPost(Post post, User user, MultipartFile file) throws IOException{
+        String postId = UUID.randomUUID().toString();
+
         if (file != null){
             Image image = Image.builder()
             .type(file.getContentType())
             .picture(ImageUtils.compressImage(file.getBytes()))
             .build();
 
-            
-
             post.setIdPost(postId);
-
             post.setPostImage(image);
             post.setComments(null);
             post.setUser(user);
@@ -45,6 +45,8 @@ public class PostService {
             post.setComments(null);
             post.setUser(user);
         }
+
+        post.setDate(LocalDateTime.now());
 
         return repo.save(post);
     }

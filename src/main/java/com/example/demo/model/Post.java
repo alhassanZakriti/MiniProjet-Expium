@@ -1,7 +1,9 @@
 package com.example.demo.model;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -23,7 +25,11 @@ public class Post {
     private String idPost;
     private String content;
     private Image postImage;
-    private boolean saved;
+    private Long likes;
+
+    @JsonIgnore
+    @CreatedDate
+    private LocalDateTime date;
 
     @JsonIgnore
     @DBRef

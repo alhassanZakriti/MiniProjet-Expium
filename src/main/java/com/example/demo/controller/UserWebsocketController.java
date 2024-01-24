@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,23 +25,25 @@ public class UserWebsocketController {
     @Autowired
     private UserService userService;
 
-    @MessageMapping("/user.addUser")
-    @SendTo("/public")
-    public User addUser(@Payload User user) {
-        Optional<User> userOptional = userService.findByUsername(user.getUsername());
+    @MessageMapping("/user.loginUser")
+    @SendTo("/user/public")
+    public User loginUser(
+            @Payload User user
+    ) {
 
-        if (userOptional.isPresent()) {
-            return userOptional.get();
-        } else {
-            // Handle the case where the user is not found
-            // You might want to create a new user, log an error, or return an error response
-            return null; // or throw an exception, depending on your requirements
+        Optional<User> userOp = userService.findByUsername(user.getUsername());
+        if(userOp.isPresent()){        
+            return user;
         }
+
+        else{return new User();}
+        
     }
 
-
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> findConnectedUsers() {
-        return ResponseEntity.ok(userService.findConnectedUsers());
+    @GetMapping("/users/{username}")
+    public ResponseEntity<List<User>> findConnectedUsers(@PathVariable String username) {
+        return ResponseEntity.ok(userService.findConnectedUsers(username));
     }
+
+    
 }

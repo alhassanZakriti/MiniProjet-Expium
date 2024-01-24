@@ -55,6 +55,7 @@ public class AuthenticationService {
             .username(request.getUsername())
             .email(request.getEmail())
             .password(passwordEncoder.encode(request.getPassword()))
+            .status(Status.ONLINE)
             .role(Role.USER)
             .build();
         
@@ -75,6 +76,8 @@ public class AuthenticationService {
             .build());
     }
 
+
+    /* ******************************* Login ******************************* */
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         var user = repo.findByUsername(request.getUsername()).orElseThrow();
@@ -86,6 +89,7 @@ public class AuthenticationService {
                 .build();
 
         user.setToken(tk);
+        user.setStatus(Status.ONLINE);
         
         repo.save(user);
         tokenRepo.save(tk);
@@ -95,6 +99,7 @@ public class AuthenticationService {
             .build();
     }
 
+    /* ******************************* Logout ******************************* */
     public ResponseEntity<?> logout(String username) {
         var user = repo.findByUsername(username).orElseThrow();
     

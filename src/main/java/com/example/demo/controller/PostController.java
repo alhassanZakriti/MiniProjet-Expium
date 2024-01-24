@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -83,26 +85,45 @@ public class PostController {
     }
 
 
-    @GetMapping("/image")
+    @GetMapping("/post-info")
     public ResponseEntity<?> showPostImage(@RequestParam("id") String id) {
-    try {
-        Post post = repo.findById(id).get();
-
-        if (post != null) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("content", post.getContent());
-
-            if (post.getPostImage() != null) {
-                byte[] uncompressedImage = ImageUtils.decompressImage(post.getPostImage().getPicture());
-                response.put("postImage", Base64.getEncoder().encodeToString(uncompressedImage));
+        try {
+            Post post = repo.findById(id).get();
+    
+            if (post != null) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("content", post.getContent());
+    
+                if (post.getPostImage() != null) {
+                    byte[] uncompressedImage = ImageUtils.decompressImage(post.getPostImage().getPicture());
+                    response.put("postImage", Base64.getEncoder().encodeToString(uncompressedImage));
+                }
+    
+                // Calculate the difference in minutes, hours, days, and weeks
+                long minutes = Duration.between(post.getDate(), LocalDateTime.now()).toMinutes();
+                long hours = minutes / 60;
+                long days = hours / 24;
+                long weeks = days / 7;
+    
+                String timeAgo;
+                if (weeks > 0) {
+                    timeAgo = weeks +"w";
+                } else if (days > 0) {
+                    timeAgo = days + "d";
+                } else if (hours > 0) {
+                    timeAgo = hours + "h";
+                } else {
+                    timeAgo = minutes + "m";
+                }
+    
+                response.put("Date", timeAgo);
+    
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.notFound().build();
             }
-
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving post image");
         }
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving post image");
     }
-}
 }
