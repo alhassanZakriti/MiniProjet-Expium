@@ -12,8 +12,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +27,7 @@ import com.example.demo.model.User;
 import com.example.demo.repository.PostRepo;
 import com.example.demo.repository.UserRepo;
 import com.example.demo.service.PostService;
+import com.example.demo.service.UserService;
 //import com.example.demo.service.UserService;
 import com.example.demo.service.tools.ImageUtils;
 
@@ -41,8 +44,8 @@ public class PostController {
     @Autowired
     private PostRepo repo;
 
-    /*@Autowired
-    private UserService userService;*/
+    @Autowired
+    private UserService userService;
     
 
     @PostMapping("/create")
@@ -66,23 +69,6 @@ public class PostController {
 
     /* *************************************** Showing user posts *************************************** */
     
-    
-    @GetMapping("/for-friends")
-    public List<Post> getPostsForFriends(User currentUser, List<User> friends) {
-        List<Post> friendPosts = new ArrayList<>();
-
-        // Include posts of the currently authenticated user
-        List<Post> currentUserPosts = repo.findByUserUsername(currentUser.getUsername());
-        friendPosts.addAll(currentUserPosts);
-
-        // Include posts of the user's friends
-        for (User friend : friends) {
-            List<Post> posts = repo.findByUserUsername(friend.getUsername());
-            friendPosts.addAll(posts);
-        }
-
-        return friendPosts;
-    }
 
 
     @GetMapping("/post-info")
@@ -92,8 +78,9 @@ public class PostController {
     
             if (post != null) {
                 Map<String, Object> response = new HashMap<>();
+                
+                response.put("postId", post.getIdPost());
                 response.put("content", post.getContent());
-    
                 if (post.getPostImage() != null) {
                     byte[] uncompressedImage = ImageUtils.decompressImage(post.getPostImage().getPicture());
                     response.put("postImage", Base64.getEncoder().encodeToString(uncompressedImage));
@@ -125,5 +112,95 @@ public class PostController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving post image");
         }
+    }
+
+    @GetMapping("/user-posts")
+    public ResponseEntity<List<Map<String, Object>>> findPosts(@RequestParam("username") String username) {
+        List<Post> posts = userService.findPostsUser(username);
+
+        List<Map<String, Object>> postDetails = new ArrayList<>();
+
+        for (Post post : posts) {
+            Map<String, Object> postInfo = new HashMap<>();
+            postInfo.put("content", post.getContent());
+
+            if (post.getPostImage() != null) {
+                byte[] uncompressedImage = ImageUtils.decompressImage(post.getPostImage().getPicture());
+                String base64Image = Base64.getEncoder().encodeToString(uncompressedImage);
+                postInfo.put("postImage", base64Image);
+            }
+
+            postDetails.add(postInfo);
+        }
+
+        return ResponseEntity.ok(postDetails);
+    }
+
+    @GetMapping("/followingPosts")
+    public ResponseEntity<List<Post>> findFollowingPosts(@RequestParam("username") String username) {
+        List<Post> followingPosts = postService.findFollowingPosts(username);
+
+        if (followingPosts.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(followingPosts);
+    }
+
+    //for multi posts
+    @GetMapping("/filter")
+    public ResponseEntity<?> filterPosts(@RequestParam("username") String username) {
+        try {
+            List<Map<String, Object>> posts = postService.filterPosts(username);
+    
+            if (posts.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No posts found");
+            }
+    
+            return ResponseEntity.ok(posts);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/like")
+    public ResponseEntity<?> likePost(@RequestParam("postId") String postId, @RequestParam("username") String username) {
+        try {
+            User currentUser = userRepo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            Post post = repo.findByIdPost(postId).orElseThrow();
+            String postUser = post.getUser().getUsername();
+            User recipient = userRepo.findByUsername(postUser).get();
+
+            if (post.getLikes().contains(currentUser)) {
+                post.getLikes().remove(currentUser);
+            } else {
+                post.getLikes().add(currentUser);
+                userService.createNotification(currentUser.getUsername(), recipient.getUsername(), "liked your post");
+            }
+
+            repo.save(post);
+
+            return ResponseEntity.ok().body("Post liked successfully");
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/likes-number")
+    public ResponseEntity<?> getLikesCount(@RequestParam("postId")String postId) {
+
+    Post post = repo.findByIdPost(postId).get();
+    int likesCount = post.getLikes().size();
+    return ResponseEntity.ok().body(likesCount);
+
+    }
+
+    @GetMapping("/likes/users")
+    public ResponseEntity<?> getUsersWhoLikedPost(@RequestParam("postId") String postId) {
+        
+        Post post = repo.findByIdPost(postId).get();
+        List<User> usersWhoLiked = post.getLikes();
+        return ResponseEntity.ok().body(usersWhoLiked);
+        
     }
 }

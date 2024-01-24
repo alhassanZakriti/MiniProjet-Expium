@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.model.Image;
+import com.example.demo.model.Notification;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;
+import com.example.demo.repository.NotificationRepo;
 import com.example.demo.repository.PostRepo;
 import com.example.demo.repository.UserRepo;
 import com.example.demo.service.tools.ImageUtils;
@@ -40,10 +43,12 @@ public class UserService {
     @Autowired
     PostRepo postRepo;
 
+    @Autowired
+    NotificationRepo notificationRepo;
 
 
 
-    /* *********************** Upload Image method start here *********************** */
+    /* *********************** Upload Image method *********************** */
     public String uploadProfilePicture(String username, MultipartFile file) throws IOException{
         try{
             
@@ -66,51 +71,23 @@ public class UserService {
         }
         
     }
-    /* *********************** Upload Image method Ends here *********************** */
-
-
-    /*********************************************************************************************************** */
-
-
-
-
-    //To Find All connected Users
-    public List<User> findConnectedUsers() {
-        return userRepo.findAllByStatus(com.example.demo.service.Status.ONLINE);
-    }
-
-
-    /*********************************************************************************************************** */
-
-
     
 
-    /*********************************************************************************************************** */
-
-
-    /* *********************************** find User method Start *********************************** */
+    /* *********************************** find User method *********************************** */
     public Optional<User> findByUsername(String username) {
         // Assume userRepo is your UserRepository or wherever you're retrieving users from
         return userRepo.findByUsername(username);
     }
-    /* *********************************** find User method End *********************************** */
-
-
-    /*********************************************************************************************************** */
-
-
-    /* *********************************** find all Users method Start *********************************** */
+    
+    
+    /* *********************************** find all Users method *********************************** */
     public ResponseEntity<List<User>> findAll() {
         List<User> users = userRepo.findAll();
         return ResponseEntity.ok(users);
     }
-    /* *********************************** find all Users method End *********************************** */
 
 
-    /*********************************************************************************************************** */
-
-
-    /* *********************************** Showing Picture method Start *********************************** */
+    /* *********************************** Showing Picture method *********************************** */
     public byte[] showPicture(String username) {
         Optional<User> userOptional = userRepo.findByUsername(username);
 
@@ -122,21 +99,9 @@ public class UserService {
 
         return new byte[0]; // Handle the case where the user is not found
     }
-    /* *********************************** Showing Picture method End *********************************** */
+    
 
-
-    /* ***----------------------------------------------- Friends Methods -----------------------------------------------*** */
-
-
-
-    /*********************************************************************************************************** */
-
-
-
-    /*********************************************************************************************************** */
-
-
-    /* *********************************** Showing All Friends method Start *********************************** */
+    /* *********************************** Showing All Friends *********************************** */
     public ResponseEntity<List<User>> getAllFriends(String username) {
         Optional<User> userOptional = userRepo.findByUsername(username);
         
@@ -162,12 +127,9 @@ public class UserService {
             return ResponseEntity.notFound().build();
         }
     }
-    /* *********************************** Showing All Friends method End *********************************** */
+    
 
-
-    /* ***----------------------------------------------- Friends Methods End -----------------------------------------------*** */
-
-    /* Try */
+    /* --------------------------------------------- */
     public List<Post> findPostsUser(String username){
         User user = userRepo.findByUsername(username).get();
         List<Post> posts = user.getPosts();
@@ -188,35 +150,22 @@ public class UserService {
         user1.follow(user2);
         userRepo.save(user1);
         userRepo.save(user2);
+        createNotification(username1,username2, "started following you");
     
         if (user1.getFollowing().contains(user2) && user2.getFollowing().contains(user1)) {
             user1.getFriends().add(user2);
             user2.getFriends().add(user1);
             userRepo.save(user1);
             userRepo.save(user2);
+
+            createNotification(username1, username2, "and you become friends");
+            
             return ResponseEntity.ok("friends");
         }
     
         return ResponseEntity.ok("following");
     }
 
-    
-
-    /* ***************************** Following posts ***************************** */
-    public List<Post> findFollowingPosts(String username) {
-        User user = userRepo.findByUsername(username).orElse(null);
-    
-        if (user == null) {
-            return Collections.emptyList();
-        }
-    
-        List<Post> followingPosts = new ArrayList<>();
-        for (User followingUser : user.getFollowing()) {
-            followingPosts.addAll(followingUser.getPosts());
-        }
-    
-        return followingPosts;
-    }
 
     /* *********************************** Unfollow method */
     public ResponseEntity<String> unfollow(String username1, String username2) {
@@ -250,32 +199,8 @@ public class UserService {
         return user1.getFriends().contains(user2) && user2.getFriends().contains(user1);
     }
 
-    //Filtering posts of following based on date (recent to oldest)
-    public List<Map<String, Object>> filterPosts(String username) {
-        User currentUser = userRepo.findByUsername(username).orElse(null);
-        if (currentUser == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
 
-        List<User> following = currentUser.getFollowing();
-        LocalDateTime currentDateTime = LocalDateTime.now();
-
-        return postRepo.findAll().stream()
-            .filter(post -> following.contains(post.getUser()))
-            .sorted(Comparator.comparing(Post::getDate).reversed())
-            .map(post -> {
-                Map<String, Object> postMap = new HashMap<>();
-                postMap.put("postId", post.getIdPost());
-                postMap.put("content", post.getContent());
-                postMap.put("postImage", post.getPostImage());
-                postMap.put("likes", post.getLikes());
-                postMap.put("timeAgo", calculateTimeAgo(post.getDate(), currentDateTime));
-                return postMap;
-            })
-            .collect(Collectors.toList());
-    }
-
-    private String calculateTimeAgo(LocalDateTime postDate, LocalDateTime currentDateTime) {
+    public String calculateTimeAgo(LocalDateTime postDate, LocalDateTime currentDateTime) {
         Duration duration = Duration.between(postDate, currentDateTime);
         long seconds = duration.getSeconds();
 
@@ -352,5 +277,43 @@ public class UserService {
         }
 
         return connectedUsers;
+    }
+
+    //------------------------- Notifications
+    String notificationId = UUID.randomUUID().toString();
+
+    public void createNotification(String senderUsername, String recipientUsername, String content) {
+        User sender = userRepo.findByUsername(senderUsername).orElseThrow();
+        User recipient = userRepo.findByUsername(recipientUsername).orElseThrow();
+        LocalDateTime timestamp = LocalDateTime.now();
+        Notification notification = Notification.builder()
+            .id(notificationId)
+            .title(sender.getName())
+            .content(content)
+            .timestamp(timestamp)
+            .recipient(recipient) // set the recipient
+            .build();
+        notificationRepo.save(notification);
+    }
+
+    //show all notifications (need to make it from newest to oldest)
+    public List<Map<String, Object>> getNotificationsForUser(String username) {
+        User currentUser = userRepo.findByUsername(username).orElse(null);
+        if (currentUser == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+    
+        LocalDateTime currentDateTime = LocalDateTime.now();
+    
+        return notificationRepo.findByRecipient(currentUser).stream()
+            .sorted(Comparator.comparing(Notification::getTimestamp).reversed())
+            .map(notification -> {
+                Map<String, Object> notificationMap = new HashMap<>();
+                notificationMap.put("title", notification.getTitle());
+                notificationMap.put("content", notification.getContent());
+                notificationMap.put("timeAgo", calculateTimeAgo(notification.getTimestamp(), currentDateTime));
+                return notificationMap;
+            })
+            .collect(Collectors.toList());
     }
 }

@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,10 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.model.Post;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
-import com.example.demo.service.tools.ImageUtils;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173/")
@@ -70,6 +65,22 @@ public class UserController {
         return userService.getAllFriends(username);
     }
 
+    //suggestion friends
+    @GetMapping("/suggestFriends")
+    public ResponseEntity<?> suggestFriends(@RequestParam("username") String username) {
+        try {
+            List<Map<String, Object>> suggestedFriends = userService.suggestFriends(username);
+
+            if (suggestedFriends.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No suggested friends found");
+            }
+
+            return ResponseEntity.ok(suggestedFriends);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     /* ******************************************************* Getting User information ******************************************************* */
     @GetMapping("/user-info")
     public User getInfo(@RequestParam("username") String username){
@@ -100,31 +111,6 @@ public class UserController {
         }
     }
 
-
-
-    @GetMapping("/posts")
-    public ResponseEntity<List<Map<String, Object>>> findPosts(@RequestParam("username") String username) {
-        List<Post> posts = userService.findPostsUser(username);
-
-        List<Map<String, Object>> postDetails = new ArrayList<>();
-
-        for (Post post : posts) {
-            Map<String, Object> postInfo = new HashMap<>();
-            postInfo.put("content", post.getContent());
-
-            if (post.getPostImage() != null) {
-                byte[] uncompressedImage = ImageUtils.decompressImage(post.getPostImage().getPicture());
-                String base64Image = Base64.getEncoder().encodeToString(uncompressedImage);
-                postInfo.put("postImage", base64Image);
-            }
-
-            postDetails.add(postInfo);
-        }
-
-        return ResponseEntity.ok(postDetails);
-    }
-
-    
     @PostMapping("/follow")
     public ResponseEntity<String> follow(@RequestParam("username1") String username1, @RequestParam("username2") String username2) {
         return userService.follow(username1, username2);
@@ -135,49 +121,4 @@ public class UserController {
         return userService.unfollow(username1, username2);
     }
 
-    @GetMapping("/followingPosts")
-    public ResponseEntity<List<Post>> findFollowingPosts(@RequestParam("username") String username) {
-        List<Post> followingPosts = userService.findFollowingPosts(username);
-
-        if (followingPosts.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(followingPosts);
-    }
-
-
-    //Not tested yet
-    @GetMapping("/filter")
-    public ResponseEntity<?> filterPosts(@RequestParam("username") String username) {
-        try {
-            List<Map<String, Object>> posts = userService.filterPosts(username);
-    
-            if (posts.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No posts found");
-            }
-    
-            return ResponseEntity.ok(posts);
-        } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
-    //suggestion friends
-    @GetMapping("/suggestFriends")
-    public ResponseEntity<?> suggestFriends(@RequestParam("username") String username) {
-        try {
-            List<Map<String, Object>> suggestedFriends = userService.suggestFriends(username);
-
-            if (suggestedFriends.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No suggested friends found");
-            }
-
-            return ResponseEntity.ok(suggestedFriends);
-        } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
 }
-
-
