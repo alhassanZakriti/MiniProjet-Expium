@@ -142,15 +142,31 @@ public class UserService {
     public ResponseEntity<String> follow(String username1, String username2) {
         User user1 = userRepo.findByUsername(username1).orElse(null);
         User user2 = userRepo.findByUsername(username2).orElse(null);
+
+        String status ;
     
         if (user1 == null || user2 == null) {
             return ResponseEntity.notFound().build();
         }
     
-        user1.follow(user2);
+        if(user1.getFollowing().contains(user2)){
+            user1.unfollow(user2);
+            if (user1.getFriends().contains(user2)) {
+                user1.getFriends().remove(user2);
+                user2.getFriends().remove(user1);
+            }
+            status = "not friends";
+        }else{
+            user1.follow(user2);
+            createNotification(username1,username2, "started following you");
+            status = "started following you";
+        }
+        
         userRepo.save(user1);
         userRepo.save(user2);
-        createNotification(username1,username2, "started following you");
+        
+
+        
     
         if (user1.getFollowing().contains(user2) && user2.getFollowing().contains(user1)) {
             user1.getFriends().add(user2);
@@ -163,29 +179,11 @@ public class UserService {
             return ResponseEntity.ok("friends");
         }
     
-        return ResponseEntity.ok("following");
+        return ResponseEntity.ok(status);
     }
 
 
-    /* *********************************** Unfollow method */
-    public ResponseEntity<String> unfollow(String username1, String username2) {
-        User user1 = userRepo.findByUsername(username1).orElse(null);
-        User user2 = userRepo.findByUsername(username2).orElse(null);
     
-        if (user1 == null || user2 == null) {
-            return ResponseEntity.notFound().build();
-        }
-    
-        user1.unfollow(user2);
-        if (user1.getFriends().contains(user2)) {
-            user1.getFriends().remove(user2);
-            user2.getFriends().remove(user1);
-        }
-        userRepo.save(user1);
-        userRepo.save(user2);
-    
-        return ResponseEntity.ok("not friends");
-    }
 
 
     public boolean areFriends(String username1, String username2) {
@@ -205,15 +203,15 @@ public class UserService {
         long seconds = duration.getSeconds();
 
         if (seconds < 60) {
-            return seconds + " s";
+            return seconds + "s";
         } else if (seconds < 3600) {
-            return seconds / 60 + " m";
+            return seconds / 60 + "m";
         } else if (seconds < 86400) {
-            return seconds / 3600 + " h";
+            return seconds / 3600 + "h";
         } else if (seconds < 604800) {
-            return seconds / 86400 + " d";
+            return seconds / 86400 + "d";
         } else {
-            return seconds / 604800 + " w";
+            return seconds / 604800 + "w";
         }
     }
 
@@ -284,16 +282,17 @@ public class UserService {
 
     public void createNotification(String senderUsername, String recipientUsername, String content) {
         User sender = userRepo.findByUsername(senderUsername).orElseThrow();
-        User recipient = userRepo.findByUsername(recipientUsername).orElseThrow();
+        User recipient = userRepo.findByUsername(recipientUsername).get();
         LocalDateTime timestamp = LocalDateTime.now();
-        Notification notification = Notification.builder()
-            .id(notificationId)
-            .title(sender.getName())
-            .content(content)
-            .timestamp(timestamp)
-            .recipient(recipient) // set the recipient
-            .build();
-        notificationRepo.save(notification);
+    
+        Notification notification = new Notification();
+        notification.setId(notificationId);
+        notification.setContent(content);
+        notification.setTitle(sender.getName());
+        notification.setTimestamp(timestamp);
+        notification.setRecipient(recipient);
+    
+        notificationRepo.save(notification); 
     }
 
     //show all notifications (need to make it from newest to oldest)

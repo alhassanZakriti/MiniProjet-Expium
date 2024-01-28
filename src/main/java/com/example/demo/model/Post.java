@@ -14,11 +14,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @Document
 public class Post {
@@ -29,7 +27,7 @@ public class Post {
 
     @JsonIgnore
     @DBRef
-    private List<User> likes = new ArrayList<>();
+    private List<User> likes;
 
     @JsonIgnore
     @CreatedDate
@@ -42,6 +40,11 @@ public class Post {
     @DBRef
     private List<Comment> comments;
 
+    public Post(){
+        this.comments = new ArrayList<>();
+        this.likes = new ArrayList<>();
+    }
+
     public void addLike(User user) {
         if (!likes.contains(user)) {
             likes.add(user);
@@ -50,5 +53,13 @@ public class Post {
 
     public void removeLike(User user) {
         likes.remove(user);
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
+
+    public void removeComment(Comment comment) {
+        comments.remove(comment);
     }
 }

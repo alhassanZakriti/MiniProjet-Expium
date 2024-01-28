@@ -14,14 +14,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.model.Comment;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;
 import com.example.demo.repository.PostRepo;
@@ -201,6 +205,50 @@ public class PostController {
         Post post = repo.findByIdPost(postId).get();
         List<User> usersWhoLiked = post.getLikes();
         return ResponseEntity.ok().body(usersWhoLiked);
+        
+    }
+
+    @PutMapping("/edit/{postId}")
+    public ResponseEntity<Post> editPost(@PathVariable String postId, @RequestBody Post updatedPost) {
+        try {
+            Post post = postService.editPost(postId, updatedPost);
+            return ResponseEntity.ok(post);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<String> deletePost(@RequestParam("postId") String postId) {
+
+        postService.deletePost(postId);
+        return ResponseEntity.ok("Deleted");
+
+    }
+
+    @PostMapping("/comment")
+    public ResponseEntity<Comment> createComment(@RequestParam("postId") String postId, @RequestParam("content") String commentContent, @RequestParam("username") String username) {
+        
+        Comment comment = postService.createComment(postId, commentContent, username);
+        return ResponseEntity.ok(comment);
+        
+    }
+
+    @GetMapping("/comments/{postId}")
+    public ResponseEntity<List<Map<String, Object>>> getAllComments(@PathVariable String postId) {
+        try {
+            List<Map<String, Object>> comments = postService.getAllComments(postId);
+            return ResponseEntity.ok(comments);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/comment/delete")
+    public ResponseEntity<?> deleteComment(@RequestParam("commantId")  String commentId) {
+        
+        postService.deleteComment(commentId);
+        return ResponseEntity.ok("Deleted");
         
     }
 }

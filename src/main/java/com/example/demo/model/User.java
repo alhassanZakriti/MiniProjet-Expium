@@ -51,9 +51,8 @@ public class User implements UserDetails{
     @JsonIgnore
     @DBRef
     private List<Post> posts;
-    @JsonIgnore
-    @DBRef
-    private List<Notification> notifications; ;
+
+    
 
     /* test following & followers */
     @JsonIgnore
@@ -70,11 +69,13 @@ public class User implements UserDetails{
         this.posts = new ArrayList<>();
         this.followers = new ArrayList<>();
         this.following = new ArrayList<>();
-        this.notifications = new ArrayList<>();
     }
 
     public void addPost(Post post) {
         this.posts.add(post);
+    }
+    public void removePost(Post post) {
+        this.posts.remove(post);
     }
 
     public void removeFriend(User friend) {
@@ -129,7 +130,5 @@ public class User implements UserDetails{
         }
     }
     
-    public void addNotification(Notification notification) {
-        this.notifications.add(notification);
-    }
+    
 }

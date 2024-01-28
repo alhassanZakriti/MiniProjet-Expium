@@ -18,9 +18,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.model.Comment;
 import com.example.demo.model.Image;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;
+import com.example.demo.repository.CommentRepo;
 import com.example.demo.repository.PostRepo;
 import com.example.demo.repository.UserRepo;
 import com.example.demo.service.tools.ImageUtils;
@@ -145,8 +147,107 @@ public class PostService {
 
     
     //Delete Post
-    public void deletePost(){
+    public void deletePost(String postId) {
+        Post post = repo.findByIdPost(postId).get();
+        User user = post.getUser();
+        user.removePost(post);
         
+        userRepo.save(user);
+
+        repo.delete(post);
     }
 
+    // Edit Post
+    public Post editPost(String postId, Post updatedPost) {
+        Optional<Post> optionalPost = repo.findById(postId);
+        if (optionalPost.isPresent()) {
+            Post post = optionalPost.get();
+            post.setContent(updatedPost.getContent());
+            post.setPostImage(updatedPost.getPostImage());
+            // Update any other fields as needed
+            return repo.save(post);
+        } else {
+            throw new IllegalArgumentException("Post not found");
+        }
+    }
+
+    //Comments party I don't wanna create a new service cuz I'm lazy hhhhhh
+
+    @Autowired 
+    private CommentRepo commentRepo;
+
+    //String commentId = UUID.randomUUID().toString();
+
+    // Comment on a post
+    public Comment createComment(String postId, String commentContent, String username) {
+        String commentId = UUID.randomUUID().toString();
+        // Find the post
+        Post post = repo.findByIdPost(postId)
+            .orElseThrow();
+
+        User user = userRepo.findByUsername(username)
+            .orElseThrow();
+    
+        // Create a new comment
+        Comment comment = Comment.builder()
+            .id(commentId)
+            .commentContent(commentContent)
+            .user(user)
+            .post(post)
+            .date(LocalDateTime.now())
+            .build();
+    
+        // Save the comment
+        comment = commentRepo.save(comment);
+    
+        // Add the comment to the post's comments and save the post
+        post.addComment(comment);
+        repo.save(post);
+    
+        return comment;
+    }
+
+    public List<Map<String, Object>> getAllComments(String idPost) {
+        Post post = repo.findByIdPost(idPost).get();
+        // Fetch all comments
+        List<Comment> comments = post.getComments();
+    
+        // Sort comments by date in descending order
+        comments.sort((comment1, comment2) -> comment2.getDate().compareTo(comment1.getDate()));
+    
+        LocalDateTime currentDateTime = LocalDateTime.now();
+    
+        // Convert to Map
+        List<Map<String, Object>> commentMaps = comments.stream().map(comment -> {
+            User user = comment.getUser();
+            Map<String, Object> commentMap = new HashMap<>();
+            commentMap.put("username", user.getUsername());
+            commentMap.put("commentId", comment.getId());
+            commentMap.put("profilePicture", user.getPicture());
+            commentMap.put("content", comment.getCommentContent());
+            commentMap.put("timeAgo", userService.calculateTimeAgo(comment.getDate(), currentDateTime));
+            return commentMap;
+        }).collect(Collectors.toList());
+    
+        return commentMaps;
+    }
+
+    public void deleteComment(String commentId) {
+    // Find the comment
+        Comment comment = commentRepo.findById(commentId)
+            .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+
+        // Get the post associated with the comment
+        Post post = comment.getPost();
+
+        // Remove the comment from the post's comments
+        post.removeComment(comment);
+
+        // Save the post
+        repo.save(post);
+
+        // Delete the comment
+        commentRepo.delete(comment);
+    }
+    
 }
