@@ -106,16 +106,33 @@ public class PostService {
     }
 
 
-    public List<Post> findFollowingPosts(String username) {
+    public List<Map<String, Object>> findFollowingPosts(String username) {
         User user = userRepo.findByUsername(username).orElse(null);
     
         if (user == null) {
             return Collections.emptyList();
         }
+
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        
     
-        List<Post> followingPosts = new ArrayList<>();
+        List<Map<String, Object>> followingPosts = new ArrayList<>();
         for (User followingUser : user.getFollowing()) {
-            followingPosts.addAll(followingUser.getPosts());
+            for (Post post : followingUser.getPosts()) {
+                Map<String, Object> postMap = new HashMap<>();
+
+                int numberOfLikes = post.getLikes().size();
+
+                postMap.put("username", followingUser.getUsername());
+                postMap.put("name", followingUser.getName());
+                postMap.put("profilePicture", followingUser.getPicture());
+                postMap.put("postId", post.getIdPost());
+                postMap.put("content", post.getContent());
+                postMap.put("postImage", post.getPostImage());
+                postMap.put("likes", numberOfLikes);
+                postMap.put("timeAgo", userService.calculateTimeAgo(post.getDate(), currentDateTime));
+                followingPosts.add(postMap);
+            }
         }
     
         return followingPosts;

@@ -141,13 +141,13 @@ public class PostController {
     }
 
     @GetMapping("/followingPosts")
-    public ResponseEntity<List<Post>> findFollowingPosts(@RequestParam("username") String username) {
-        List<Post> followingPosts = postService.findFollowingPosts(username);
-
+    public ResponseEntity<List<Map<String, Object>>> findFollowingPosts(@RequestParam("username") String username) {
+        List<Map<String, Object>> followingPosts = postService.findFollowingPosts(username);
+    
         if (followingPosts.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
+    
         return ResponseEntity.ok(followingPosts);
     }
 

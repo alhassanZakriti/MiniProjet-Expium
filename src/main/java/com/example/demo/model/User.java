@@ -37,10 +37,12 @@ public class User implements UserDetails{
 
     private com.example.demo.service.Status status;
 
+    @JsonIgnore
     private Role role;
 
 
 
+    @JsonIgnore
     @DBRef
     private Token token;
 
