@@ -217,20 +217,21 @@ public class UserService {
 
     //suggestion friends
     public List<Map<String, Object>> suggestFriends(String username) {
-        User currentUser = userRepo.findByUsername(username).orElse(null);
+        User currentUser = userRepo.findByUsername(username).get();
         if (currentUser == null) {
             throw new UsernameNotFoundException("User not found");
         }
     
         List<User> friends = currentUser.getFriends();
+        List<User> following = currentUser.getFollowing(); // Get the list of users the current user is following
         Set<Map<String, Object>> suggestedFriends = new HashSet<>();
     
-        if (friends.isEmpty()) {
-            // Suggest random users if the current user doesn't have any friends
-            List<User> allUsers = userRepo.findAll();
-            Collections.shuffle(allUsers);
+        List<User> allUsers = userRepo.findAll();
+        Collections.shuffle(allUsers);
+    
+        if (friends.isEmpty() || friends.stream().allMatch(friend -> friend.getFriends().size() <= 3)) {
             for (User user : allUsers.subList(0, Math.min(5, allUsers.size()))) {
-                if (!user.equals(currentUser)) {
+                if (!user.equals(currentUser) && !following.contains(user)) { // Check if the current user is following the user
                     Map<String, Object> suggestedFriend = new HashMap<>();
                     suggestedFriend.put("username", user.getUsername());
                     suggestedFriend.put("name", user.getName());
@@ -243,7 +244,7 @@ public class UserService {
             for (User friend : friends) {
                 List<User> friendsOfFriend = friend.getFriends();
                 for (User suggestedFriend : friendsOfFriend) {
-                    if (!friends.contains(suggestedFriend) && !suggestedFriend.equals(currentUser)) {
+                    if (!friends.contains(suggestedFriend) && !suggestedFriend.equals(currentUser) && !following.contains(suggestedFriend)) { // Check if the current user is following the suggested friend
                         Map<String, Object> friendSuggestion = new HashMap<>();
                         friendSuggestion.put("username", suggestedFriend.getUsername());
                         friendSuggestion.put("name", suggestedFriend.getName());
@@ -257,7 +258,8 @@ public class UserService {
     
         return new ArrayList<>(suggestedFriends);
     }
-    
+
+
     private int countMutualFriends(List<User> friends, List<User> friendsOfFriend) {
         Set<User> mutualFriends = new HashSet<>(friends);
         mutualFriends.retainAll(friendsOfFriend);
