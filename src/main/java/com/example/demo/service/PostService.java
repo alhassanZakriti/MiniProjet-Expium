@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -156,10 +157,12 @@ public class PostService {
     
                 postMap.put("username", followingUser.getUsername());
                 postMap.put("name", followingUser.getName());
-                postMap.put("profilePicture", followingUser.getPicture());
+                //test
+                postMap.put("profilePicture", Base64.getEncoder().encodeToString(followingUser.getPicture().getPicture()));
                 postMap.put("postId", post.getIdPost());
                 postMap.put("content", post.getContent());
-                postMap.put("postImage", post.getPostImage());
+                //test
+                postMap.put("postImage", Base64.getEncoder().encodeToString(post.getPostImage().getPicture()));
                 postMap.put("likes", numberOfLikes);
                 postMap.put("timeAgo", userService.calculateTimeAgo(post.getDate(), currentDateTime));
                 followingPosts.add(postMap);
