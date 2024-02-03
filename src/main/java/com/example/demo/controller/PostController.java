@@ -1,11 +1,6 @@
 package com.example.demo.controller;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,8 +26,7 @@ import com.example.demo.repository.PostRepo;
 import com.example.demo.repository.UserRepo;
 import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
-//import com.example.demo.service.UserService;
-import com.example.demo.service.tools.ImageUtils;
+
 
 
 @RestController
@@ -75,48 +68,7 @@ public class PostController {
     
 
 
-    @GetMapping("/post-info")
-    public ResponseEntity<?> showPostImage(@RequestParam("id") String id) {
-        try {
-            Post post = repo.findById(id).get();
     
-            if (post != null) {
-                Map<String, Object> response = new HashMap<>();
-                
-                response.put("postId", post.getIdPost());
-                response.put("content", post.getContent());
-                if (post.getPostImage() != null) {
-                    byte[] uncompressedImage = ImageUtils.decompressImage(post.getPostImage().getPicture());
-                    response.put("postImage", Base64.getEncoder().encodeToString(uncompressedImage));
-                }
-    
-                // Calculate the difference in minutes, hours, days, and weeks
-                long minutes = Duration.between(post.getDate(), LocalDateTime.now()).toMinutes();
-                long hours = minutes / 60;
-                long days = hours / 24;
-                long weeks = days / 7;
-    
-                String timeAgo;
-                if (weeks > 0) {
-                    timeAgo = weeks +"w";
-                } else if (days > 0) {
-                    timeAgo = days + "d";
-                } else if (hours > 0) {
-                    timeAgo = hours + "h";
-                } else {
-                    timeAgo = minutes + "m";
-                }
-    
-                response.put("Date", timeAgo);
-    
-                return ResponseEntity.ok(response);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving post image");
-        }
-    }
 
     @GetMapping("/{username}/posts")
     public List<Map<String, Object>> getUserPosts(@PathVariable String username) {

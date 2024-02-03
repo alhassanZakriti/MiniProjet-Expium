@@ -3,7 +3,6 @@ package com.example.demo.service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -100,11 +99,22 @@ public class PostService {
             Map<String, Object> postMap = new HashMap<>();
     
             int numberOfLikes = post.getLikes().size();
+
+            byte[] pic=null;
+            if(post.getPostImage() != null) {
+                pic = ImageUtils.decompressImage(post.getPostImage().getPicture());
+            }
+
+            byte[] profile =null;
+            if(user.getPicture() != null) {
+                profile = ImageUtils.decompressImage(user.getPicture().getPicture());
+            }
     
             postMap.put("username", user.getUsername());
+            postMap.put("picture", profile);
             postMap.put("name", user.getName());
             postMap.put("content", post.getContent());
-            postMap.put("postImage", post.getPostImage());
+            postMap.put("postImage", pic);
             postMap.put("likes", numberOfLikes);
             postMap.put("timeAgo", userService.calculateTimeAgo(post.getDate(), currentDateTime));
             postMap.put("postId", post.getIdPost());
@@ -154,15 +164,25 @@ public class PostService {
                 Map<String, Object> postMap = new HashMap<>();
     
                 int numberOfLikes = post.getLikes().size();
+
+                byte[] pic=null;
+                if(post.getPostImage() != null) {
+                    pic = ImageUtils.decompressImage(post.getPostImage().getPicture());
+                }
+
+                byte[] profile =null;
+                if(user.getPicture() != null) {
+                    profile = ImageUtils.decompressImage(followingUser.getPicture().getPicture());
+                }
     
                 postMap.put("username", followingUser.getUsername());
                 postMap.put("name", followingUser.getName());
                 //test
-                postMap.put("profilePicture", Base64.getEncoder().encodeToString(followingUser.getPicture().getPicture()));
+                postMap.put("picture", profile);
                 postMap.put("postId", post.getIdPost());
                 postMap.put("content", post.getContent());
                 //test
-                postMap.put("postImage", Base64.getEncoder().encodeToString(post.getPostImage().getPicture()));
+                postMap.put("postImage", pic);
                 postMap.put("likes", numberOfLikes);
                 postMap.put("timeAgo", userService.calculateTimeAgo(post.getDate(), currentDateTime));
                 followingPosts.add(postMap);
@@ -274,10 +294,14 @@ public class PostService {
         // Convert to Map
         List<Map<String, Object>> commentMaps = comments.stream().map(comment -> {
             User user = comment.getUser();
+            byte[] profile =null;
+            if(user.getPicture() != null) {
+                profile = ImageUtils.decompressImage(user.getPicture().getPicture());
+            }
             Map<String, Object> commentMap = new HashMap<>();
             commentMap.put("username", user.getUsername());
             commentMap.put("commentId", comment.getId());
-            commentMap.put("profilePicture", user.getPicture());
+            commentMap.put("profilePicture", profile);
             commentMap.put("content", comment.getCommentContent());
             commentMap.put("timeAgo", userService.calculateTimeAgo(comment.getDate(), currentDateTime));
             return commentMap;
