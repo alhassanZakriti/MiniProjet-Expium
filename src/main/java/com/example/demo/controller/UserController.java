@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
+
+import jakarta.websocket.server.PathParam;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173/")
@@ -114,6 +117,11 @@ public class UserController {
     @PostMapping("/follow")
     public ResponseEntity<String> follow(@RequestParam("username1") String username1, @RequestParam("username2") String username2) {
         return userService.follow(username1, username2);
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<?> getUserInformation(@PathVariable String username) {
+        return ResponseEntity.ok(userService.getUserInfo(username));
     }
 
 }

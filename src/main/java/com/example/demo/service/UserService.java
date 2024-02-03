@@ -310,4 +310,19 @@ public class UserService {
             })
             .collect(Collectors.toList());
     }
+
+    public Map<String, Object> getUserInfo(String username){
+        User user = userRepo.findById(username).get(); 
+    
+        byte[] picture=null;
+        if(user.getPicture()!=null){
+            picture = ImageUtils.decompressImage(user.getPicture().getPicture());
+        }
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("username", username);
+        userInfo.put("name", user.getName());
+        userInfo.put("picture", picture);
+    
+        return userInfo;
+    }
 }
