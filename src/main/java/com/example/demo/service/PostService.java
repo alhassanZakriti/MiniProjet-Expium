@@ -85,6 +85,38 @@ public class PostService {
     }
 
 
+    public List<Map<String, Object>> findUserPosts(String username) {
+        User user = userRepo.findByUsername(username).orElse(null);
+    
+        if (user == null) {
+            return Collections.emptyList();
+        }
+    
+        LocalDateTime currentDateTime = LocalDateTime.now();
+    
+        List<Map<String, Object>> userPosts = new ArrayList<>();
+        for (Post post : user.getPosts()) {
+            Map<String, Object> postMap = new HashMap<>();
+    
+            int numberOfLikes = post.getLikes().size();
+    
+            postMap.put("username", user.getUsername());
+            postMap.put("name", user.getName());
+            postMap.put("content", post.getContent());
+            postMap.put("postImage", post.getPostImage());
+            postMap.put("likes", numberOfLikes);
+            postMap.put("timeAgo", userService.calculateTimeAgo(post.getDate(), currentDateTime));
+            postMap.put("postId", post.getIdPost());
+            userPosts.add(postMap);
+        }
+    
+        // Sort the posts by date in descending order (Last In First Out)
+        userPosts.sort(Comparator.comparing(postMap -> (String) postMap.get("timeAgo")));
+    
+        return userPosts;
+    }
+
+
     //Getting list pf post of an user
     public ResponseEntity<List<Post>> getPosts(User user){
 
@@ -112,17 +144,16 @@ public class PostService {
         if (user == null) {
             return Collections.emptyList();
         }
-
+    
         LocalDateTime currentDateTime = LocalDateTime.now();
-        
     
         List<Map<String, Object>> followingPosts = new ArrayList<>();
         for (User followingUser : user.getFollowing()) {
             for (Post post : followingUser.getPosts()) {
                 Map<String, Object> postMap = new HashMap<>();
-
+    
                 int numberOfLikes = post.getLikes().size();
-
+    
                 postMap.put("username", followingUser.getUsername());
                 postMap.put("name", followingUser.getName());
                 postMap.put("profilePicture", followingUser.getPicture());
@@ -134,6 +165,9 @@ public class PostService {
                 followingPosts.add(postMap);
             }
         }
+    
+        // Sort the posts by timeAgo in ascending order
+        followingPosts.sort(Comparator.comparing(postMap -> (String) postMap.get("timeAgo")));
     
         return followingPosts;
     }

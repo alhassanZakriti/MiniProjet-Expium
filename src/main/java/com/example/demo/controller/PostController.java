@@ -118,34 +118,17 @@ public class PostController {
         }
     }
 
-    @GetMapping("/user-posts")
-    public ResponseEntity<List<Map<String, Object>>> findPosts(@RequestParam("username") String username) {
-        List<Post> posts = userService.findPostsUser(username);
-
-        List<Map<String, Object>> postDetails = new ArrayList<>();
-
-        for (Post post : posts) {
-            Map<String, Object> postInfo = new HashMap<>();
-            postInfo.put("content", post.getContent());
-
-            if (post.getPostImage() != null) {
-                byte[] uncompressedImage = ImageUtils.decompressImage(post.getPostImage().getPicture());
-                String base64Image = Base64.getEncoder().encodeToString(uncompressedImage);
-                postInfo.put("postImage", base64Image);
-            }
-
-            postDetails.add(postInfo);
-        }
-
-        return ResponseEntity.ok(postDetails);
+    @GetMapping("/{username}/posts")
+    public List<Map<String, Object>> getUserPosts(@PathVariable String username) {
+        return postService.findUserPosts(username);
     }
 
     @GetMapping("/followingPosts")
-    public ResponseEntity<List<Map<String, Object>>> findFollowingPosts(@RequestParam("username") String username) {
+    public ResponseEntity<?> findFollowingPosts(@RequestParam("username") String username) {
         List<Map<String, Object>> followingPosts = postService.findFollowingPosts(username);
     
         if (followingPosts.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok("no post found");
         }
     
         return ResponseEntity.ok(followingPosts);

@@ -129,13 +129,6 @@ public class UserService {
     }
     
 
-    /* --------------------------------------------- */
-    public List<Post> findPostsUser(String username){
-        User user = userRepo.findByUsername(username).get();
-        List<Post> posts = user.getPosts();
-        //byte[] images = ImageUtils.decompressImage(posts.get);
-        return posts;
-    }
 
     //-----------------------------------------------------------------------
 
