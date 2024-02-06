@@ -118,14 +118,24 @@ public class PostService {
             postMap.put("likes", numberOfLikes);
             postMap.put("timeAgo", userService.calculateTimeAgo(post.getDate(), currentDateTime));
             postMap.put("postId", post.getIdPost());
+
+            postMap.put("date", post.getDate());
+
             userPosts.add(postMap);
         }
     
         // Sort the posts by date in descending order (Last In First Out)
-        userPosts.sort(Comparator.comparing(postMap -> (String) postMap.get("timeAgo")));
+        userPosts.sort((map1, map2) -> {
+            LocalDateTime date1 = (LocalDateTime) map1.get("date");
+            LocalDateTime date2 = (LocalDateTime) map2.get("date");
+            return date2.compareTo(date1);
+        });
     
         return userPosts;
     }
+
+
+
 
 
     //Getting list pf post of an user
@@ -184,13 +194,20 @@ public class PostService {
                 //test
                 postMap.put("postImage", pic);
                 postMap.put("likes", numberOfLikes);
+
+                postMap.put("date", post.getDate());
+
                 postMap.put("timeAgo", userService.calculateTimeAgo(post.getDate(), currentDateTime));
                 followingPosts.add(postMap);
             }
         }
     
         // Sort the posts by timeAgo in ascending order
-        followingPosts.sort(Comparator.comparing(postMap -> (String) postMap.get("timeAgo")));
+        followingPosts.sort((map1, map2) -> {
+            LocalDateTime date1 = (LocalDateTime) map1.get("date");
+            LocalDateTime date2 = (LocalDateTime) map2.get("date");
+            return date2.compareTo(date1);
+        });
     
         return followingPosts;
     }
@@ -327,5 +344,44 @@ public class PostService {
         // Delete the comment
         commentRepo.delete(comment);
     }
+
+    public Map<String, Object> getPostInfo(String postId) {
+        // Find the post by its ID
+        Post post = repo.findById(postId).orElse(null);
     
+        if (post == null) {
+            return Collections.emptyMap();
+        }
+    
+        // Get the user who posted
+        User user = post.getUser();
+    
+        Map<String, Object> postInfo = new HashMap<>();
+    
+        byte[] pic = null;
+        if (post.getPostImage() != null) {
+            pic = ImageUtils.decompressImage(post.getPostImage().getPicture());
+        }
+    
+        byte[] profile = null;
+        if (user.getPicture() != null) {
+            profile = ImageUtils.decompressImage(user.getPicture().getPicture());
+        }
+    
+        int numberOfLikes = post.getLikes().size();
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        String timeAgo = userService.calculateTimeAgo(post.getDate(), currentDateTime);
+    
+        postInfo.put("username", user.getUsername());
+        postInfo.put("name", user.getName());
+        postInfo.put("picture", profile);
+        postInfo.put("postId", post.getIdPost());
+        postInfo.put("content", post.getContent());
+        postInfo.put("postImage", pic);
+        postInfo.put("likes", numberOfLikes);
+        postInfo.put("timeAgo", timeAgo);
+    
+        return postInfo;
+    }
+
 }

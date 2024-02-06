@@ -83,6 +83,7 @@ public class PostController {
             return ResponseEntity.ok("no post found");
         }
     
+        
         return ResponseEntity.ok(followingPosts);
     }
 
@@ -185,5 +186,16 @@ public class PostController {
         postService.deleteComment(commentId);
         return ResponseEntity.ok("Deleted");
         
+    }
+
+    @GetMapping("/{postId}/info")
+    public ResponseEntity<?> getPostInfo(@PathVariable("postId") String postId) {
+        Map<String, Object> postInfo = postService.getPostInfo(postId);
+
+        if (postInfo.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
+        }
+
+        return ResponseEntity.ok(postInfo);
     }
 }
