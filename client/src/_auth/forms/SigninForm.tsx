@@ -19,6 +19,8 @@ const SigninForm = () => {
   // const [formData, setFormData] = useState<formDataType>();
   const [token, setToken] = useState<string>("");
 
+  const [error, setError] = useState<string>(""); 
+  const [isLoading, setIsLoading] = useState(false);
   
   const { setUser } = useContext(UserContext);
 
@@ -28,6 +30,8 @@ const SigninForm = () => {
     username: "",
     password: ""
   };
+
+  
 
   useEffect(() => {
     const storedToken = localStorage.getItem('myToken');
@@ -75,6 +79,9 @@ const SigninForm = () => {
       })
       .catch(error => {
         console.error('Error creating user:', error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
   
@@ -116,7 +123,7 @@ const SigninForm = () => {
 
         }
         
-        <button className={isValidLength?"primary-btn": "disabled-btn"} type="submit" disabled={isValidLength? false : true}>Log in</button>
+        <button className={!(isLoading)?"primary-btn": "disabled-btn"} type="submit" disabled={isLoading? true : false}>Log in</button>
         <p className="text">You don't have an account? <Link to="/sign-up" className="primary-text">Create One</Link></p>
 
       </form>

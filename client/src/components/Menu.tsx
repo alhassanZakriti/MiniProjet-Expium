@@ -7,12 +7,15 @@ import { FaUserFriends } from "react-icons/fa";
 import { IoMdPerson } from "react-icons/io";
 import axios from "axios";
 import { IoLogOut } from "react-icons/io5";
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 
 
 const Menu = () => {
   const {pathname} = useLocation();
   
+
   const username = localStorage.getItem("myUserName");
   const destroyToken = () => {
     localStorage.removeItem("myToken");
@@ -53,10 +56,10 @@ const Menu = () => {
 
         <h3 className={pathname === "/friends"? "checked": "unchecked"}>Friends</h3>
       </Link>
-      <Link className="profile-hider flexing" to='/profile'>
-        <IoMdPerson className={pathname === "/profile"? "icon-menu-checked ": "icon-menu-unchecked "}/>
+      <Link className="profile-hider flexing" to={`/profile/${username}`}>
+        <IoMdPerson className={pathname === "/profile/*"? "icon-menu-checked ": "icon-menu-unchecked "}/>
 
-        <h3 className={pathname === "/profile"? "checked ": "unchecked "}>Profile</h3>
+        <h3 className={pathname === "/profile/*"? "checked ": "unchecked "}>Profile</h3>
       </Link>
 
       <button onClick={destroyToken} className="btn-log">

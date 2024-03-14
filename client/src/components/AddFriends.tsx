@@ -34,6 +34,7 @@ const AddFriends = () => {
   return (
     <div className="right-side">
         <h1>Add New Friends</h1>
+        {isLoading? (<div className="empty-page">Loading...</div>):("")}
         {error? (<div className="empty-page">There are no people to find!</div>):(users.map((user) => (
         <AddFriend profile={profile} username={user.username} firstName={user.name} lastName="" />
       )))}

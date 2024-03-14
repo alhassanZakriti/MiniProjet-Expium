@@ -26,6 +26,7 @@ const Post = (props:any) => {
     //     setIsSaved(false);
     // }
 
+
     
     const handleClickOutside = () => setShowPopUp(false);
 
@@ -34,12 +35,12 @@ const Post = (props:any) => {
     <div className="post-style">
         <div className="top-post">
             <Link to="/profile" className="flex">
-                <img className="profile-pic" src={props.profile} alt="profile" />
+                <img className="profile-pic" src={"data:image/png;base64,"+props.profilePic} alt="profile" />
                 <div className="name-user">
                     <h2 className="name-area">{props.firstName} {props.lastName}</h2>
                     <div className="id-min">
                         <p className="user-area">@{props.username}</p>
-                        <p className="when">12m</p>
+                        <p className="when">{props.ago}</p>
                     </div>
                     
                 </div>
@@ -57,8 +58,7 @@ const Post = (props:any) => {
         </div>
         <div className="post-content">
             {props.caption}
-            {(props.isImage ==="yes")? <img src={props.thisImage} className="post-picture"/> : ""}
-            
+            {(props.isImage ==="yes")? <img src={"data:image/jpeg;base64,"+props.thisImage} className="post-picture"/> : ""}
         </div>
         <div className="reactions">
             <div className="upVote-btn" onClick={()=>setIsUp(!isUp)}>

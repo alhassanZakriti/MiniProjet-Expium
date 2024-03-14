@@ -108,12 +108,12 @@ const App = () => {
                   <Route path='/activities' element={<Activities />} />
                   <Route path='/add-post' element={<CreatePost />} />
                   <Route path='/chat' element={<Chat />} />
-                  <Route path='/chat/message' element={<InsideChat />} />
+                  <Route path='/chat/message/:roomId' element={<InsideChat />} />
                   <Route path='/friends' element={<Friends />} />
-                  <Route path='/profile' element={<Profile />} />
+                  <Route path='/profile/:userId' element={<Profile />} />
                   <Route path='/settings' element={<Settings />} />
                   <Route path='/search' element={<Search />} />
-                  <Route path='/post' element={<InsidePost />} />
+                  <Route path='/post/:postId' element={<InsidePost />} />
               </Route>
               
           </Routes>

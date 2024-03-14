@@ -1,13 +1,44 @@
 import { FaBookmark } from "react-icons/fa6"
 import { IoIosArrowUp } from "react-icons/io"
 import { MdOutlineChatBubble, MdOutlineMoreHoriz } from "react-icons/md"
-import { Link } from "react-router-dom"
-import {useState} from "react";
+import { Link, useParams } from "react-router-dom"
+import {useState, useEffect} from "react";
+import axios from "axios";
 
 const InsidePost = (props:any) => {
+  const postId = useParams();
+  const postID =  postId.postId;
 
+  console.log(postID);
     const [isUp,setIsUp]= useState(false);
     const [isSaved,setIsSaved]= useState(false);
+
+    const [isLoading, setIsLoading] = useState(true);   
+    const [error, setError] = useState(null);
+    const [info, setInfo] = useState<any>();
+
+    useEffect(() => {
+
+        axios
+        .get(`http://localhost:8080/user`, {
+          
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("myToken")}`
+          },
+        })
+        .then((res) => {
+          setInfo(res.data);
+          console.log(res.data);
+        })
+        .catch((err) => {
+          setError(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+
+    }
+    , []);
     
   return (
     <div className="post-style content-area">

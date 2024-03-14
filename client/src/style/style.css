@@ -373,6 +373,11 @@ header {
   transition: 800ms;
 }
 
+.preloader-pages {
+  width: 100%;
+  height: 100%;
+}
+
 .center {
   height: 87vh;
   display: flex;
@@ -901,20 +906,17 @@ header {
 .profile {
   width: 50vw;
   overflow: scroll;
-  height: 91vh;
+  height: 88vh;
 }
 .profile .posts {
   width: 100%;
   margin-block: 2em;
 }
-.profile .posts .btns {
-  display: flex;
-  justify-content: space-around;
-}
 .profile .posts .btns button {
   all: unset;
   cursor: pointer;
   font-weight: 700;
+  font-size: 1.4rem;
 }
 .profile .pic-name {
   display: flex;
@@ -1042,6 +1044,14 @@ header {
 .activity-style .notify-text h4 {
   margin-right: 0.2em;
   color: black;
+}
+.activity-style .notify-text p {
+  color: rgba(0, 0, 0, 0.5411764706);
+  margin-right: 0.4em;
+}
+.activity-style .notify-text .ago {
+  color: rgba(0, 0, 0, 0.5411764706);
+  font-weight: 600;
 }
 
 .activity-style:hover {
@@ -1247,6 +1257,12 @@ header {
   .top-left img {
     margin-right: 2em;
   }
+  .top-left h2 {
+    max-width: 30vw; /* Set the maximum width of the text column */
+    margin-left: 1em;
+  }
+}
+@media only screen and (max-width: 720px) {
   .top-left h2 {
     display: none;
   }
