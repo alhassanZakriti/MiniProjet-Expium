@@ -1,8 +1,18 @@
+
 import { Link } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import profile from '../../assets/profile.png'
 
+import { useRef, useEffect } from "react";
+
 const InsideChat = () => {
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Scroll to bottom when the component mounts
+    containerRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
 
   const data :{firstname: String; lastname: String ; username: String}={
     firstname: "Al Hassan",
@@ -28,7 +38,7 @@ const InsideChat = () => {
           <h2 className="fullname">{data.firstname} {data.lastname}</h2>
         </Link>
       </div>
-      <div className="messages">
+      <div className="messages" >
         <p className="recieved">
           {message.recieved}
         </p>
@@ -47,9 +57,10 @@ const InsideChat = () => {
         <p className="sent">
           {message.sentShort}
         </p>
-        <p className="sent">
+        <p className="sent" >
           {message.sentShort}
         </p>
+        <div ref={containerRef}></div>
       </div>
       <form className="foot-chat">
         <input placeholder="type something..." type="text" name="message"  />

@@ -40,6 +40,7 @@ const InsidePost = (props:any) => {
                 {(isSaved)? (<h4 className="upVoted">Saved</h4>):(<h4 className="UpVote">save</h4>)}
             </div>
         </div>
+        <Comment />
     </div>
   )
 }

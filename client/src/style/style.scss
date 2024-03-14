@@ -318,6 +318,13 @@ header{
         height: 2.5em;
         object-fit: cover;
     }
+    h2{
+        max-width: 20vw;  /* Set the maximum width of the text column */
+            overflow: hidden;
+            white-space: nowrap; /* Prevent the text from wrapping to the next line */
+            overflow: hidden; /* Hide any overflow content */
+            text-overflow: ellipsis;
+    }
 }
 
 .empty-page{
@@ -461,6 +468,22 @@ header{
 // }
 
 
+.when{
+    font-size: .6rem;
+    color: #0051ffa2;
+    font-weight: 700;
+    background-color: #0051ff23;
+    border-radius: 10px;
+    padding: .2em .5em;
+    margin-left: 1em;
+}
+
+.id-min{
+    display: flex;
+
+    align-items: center;
+}
+
 .friend-box{
 
     padding: 1.5em;
@@ -582,6 +605,7 @@ header{
         padding: .5em;
         
     }
+
     .three-points:hover{
         background-color: #0051ff13;
     }

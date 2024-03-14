@@ -21,7 +21,11 @@ const Home = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/user/posts", { params })
+      .get(`http://localhost:8080/user/followingPosts?username=${localStorage.getItem("myUserName")}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("myToken")}`,
+        },
+      })
       .then((res) => {
         setUsers(res.data);
       })

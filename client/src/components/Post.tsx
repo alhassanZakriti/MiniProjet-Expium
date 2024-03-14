@@ -37,7 +37,11 @@ const Post = (props:any) => {
                 <img className="profile-pic" src={props.profile} alt="profile" />
                 <div className="name-user">
                     <h2 className="name-area">{props.firstName} {props.lastName}</h2>
-                    <p className="user-area">@{props.username}</p>
+                    <div className="id-min">
+                        <p className="user-area">@{props.username}</p>
+                        <p className="when">12m</p>
+                    </div>
+                    
                 </div>
             </Link>
             <OutsideClickHandler onOutsideClick={() => setShowPopUp(false)}> <button className="three-points" onClick={()=>setShowPopUp(!showPopUp)}><MdOutlineMoreHoriz /></button></OutsideClickHandler>

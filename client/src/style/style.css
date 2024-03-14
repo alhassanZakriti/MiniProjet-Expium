@@ -314,6 +314,13 @@ header {
   -o-object-fit: cover;
      object-fit: cover;
 }
+.top-left h2 {
+  max-width: 20vw; /* Set the maximum width of the text column */
+  overflow: hidden;
+  white-space: nowrap; /* Prevent the text from wrapping to the next line */
+  overflow: hidden; /* Hide any overflow content */
+  text-overflow: ellipsis;
+}
 
 .empty-page {
   font-size: 1.7rem;
@@ -449,6 +456,21 @@ header {
 }
 .head-chat .icon:hover {
   background-color: rgba(0, 0, 0, 0.0588235294);
+}
+
+.when {
+  font-size: 0.6rem;
+  color: rgba(0, 81, 255, 0.6352941176);
+  font-weight: 700;
+  background-color: rgba(0, 81, 255, 0.137254902);
+  border-radius: 10px;
+  padding: 0.2em 0.5em;
+  margin-left: 1em;
+}
+
+.id-min {
+  display: flex;
+  align-items: center;
 }
 
 .friend-box {

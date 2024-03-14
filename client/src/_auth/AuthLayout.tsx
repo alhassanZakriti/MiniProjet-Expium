@@ -7,6 +7,7 @@ import { useRef, useState } from 'react';
 
 const AuthLayout = () => {
 
+  const token = localStorage.getItem('myToken');
   // const [signin, setSignin] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -14,7 +15,7 @@ const AuthLayout = () => {
 
     <>
       {
-        isAuthenticated? (
+        (token)? (
           <Navigate to='/' />
         ):(
           <section className="landing-page">

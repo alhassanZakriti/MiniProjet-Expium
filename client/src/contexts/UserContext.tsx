@@ -5,6 +5,7 @@ interface User {
     name: string;
     username: string;
     email: string;
+    picture: string;
     password: string;
     followers: number;
     following: number;

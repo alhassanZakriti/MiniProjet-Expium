@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom"
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
+import { ProfilePicContext } from "../contexts/ProfilePicContext";
 
 const Greeting = (props:any) => {
     const { user } = useContext(UserContext);
+    const { profilePic } = useContext(ProfilePicContext);
 
   return (
     <div className="top-left">
@@ -13,10 +15,10 @@ const Greeting = (props:any) => {
             </svg>
         </Link>
         <h2>
-            {(user != null && user.name) ? `Hey, ${user.name}!` : ""}
+            {(user != null && user.name) ? `Hey, ${user.name} !` : ""}
         </h2>
         <Link to="/profile">
-            <img src={props.MyPfp} alt="profile picture" />
+            <img src={(user != null && user.picture)? ("data:image/png;base64,"+user.picture):("data:image/png;base64,"+profilePic)} alt="profile picture" />
         </Link>
         <Link to="/settings">
             <svg width="28" height="28" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -5,7 +5,7 @@ import { BiSolidPlusSquare } from "react-icons/bi";
 import { MdOutlineChatBubble } from "react-icons/md";
 import { FaUserFriends } from "react-icons/fa";
 import { IoMdPerson } from "react-icons/io";
-
+import axios from "axios";
 import { IoLogOut } from "react-icons/io5";
 
 
@@ -13,8 +13,17 @@ import { IoLogOut } from "react-icons/io5";
 const Menu = () => {
   const {pathname} = useLocation();
   
+  const username = localStorage.getItem("myUserName");
   const destroyToken = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("myToken");
+    localStorage.removeItem("myUserName");
+    axios.post('http://localhost:8080/user/auth/logout', {username})
+      .then(response => {
+        console.log('logged out successfully:', response.data);
+      })
+      .catch(error => {
+        console.error('Error creating user:', error);
+      });
     window.location.href = "/sign-in";
   }
 

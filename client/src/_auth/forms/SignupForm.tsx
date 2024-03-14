@@ -1,7 +1,8 @@
+import axios from "axios"
 import Logo from "../../components/Logo"
-import {useState} from "react"
+import {useState,  useEffect} from "react"
 import {useForm} from 'react-hook-form'
-import { Link } from "react-router-dom"
+import { Link, Navigate } from "react-router-dom"
 
 
 
@@ -18,7 +19,8 @@ const SignupForm = () => {
   }
 
 
-  const [password, setPassword] = useState('');
+  const [token, setToken] = useState<string>("");
+  const [Password, setPassword] = useState('');
   const [isValidLength, setIsValidLength] = useState(true);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +31,36 @@ const SignupForm = () => {
 
   const submitForm = (data:any) => {
     console.log(data.userName)
+    const username=data.userName;
+    const name=data.name;
+    const email=data.email;
+    const password=Password;
+    console.log(username, name, email, password)
+
+    axios.post('http://localhost:8080/user/auth/register', {
+      username, name, email, password
+      
+    }).then((res) => {
+      console.log('User created successfully:', res.data);
+      setToken(res.data.token);
+      
+      // No need for useEffect here, use setToken directly
+      localStorage.setItem('myToken', res.data.token);
+      localStorage.setItem('myUserName', username);
+    }).catch((err) => {
+      console.log(err);
+    })
   }
+
+  
+  useEffect(() => {
+    // Move the token storage logic here
+    const storedToken = localStorage.getItem('myToken');
+    if (storedToken) {
+      setToken(storedToken);
+    }
+
+  }, []);
   const [isVisible,setIsVisible] = useState(true)
 
   return (
@@ -42,8 +73,7 @@ const SignupForm = () => {
         Please enter the required informations
       </p>
       <form onSubmit={handleSubmit(submitForm)} className="auth-form">
-        <input type="text" className="input-area" placeholder="First Name" {...register('firstName')}required/>
-        <input type="text" className="input-area" placeholder="Last Name" {...register('lastName')}required/>
+        <input type="text" className="input-area" placeholder="Full Name" {...register('name')}required/>
         <input type="text" className="input-area" placeholder="Username" {...register('userName')}required/>
         <input type="email" className="input-area" placeholder="Email" {...register('email')}required/>
         <div className="input-area">
@@ -59,11 +89,12 @@ const SignupForm = () => {
           </a>
         </div>
         {isValidLength? null : <p className="error-msg">A password must be greater that 8 characters</p>}
-        <p className="error-msg">{fillingError}</p>
+        {/* <p className="error-msg">{fillingError}</p> */}
         
         <button className={isValidLength?"primary-btn": "disabled-btn"} type="submit" disabled={isValidLength? false : true}>Sign up</button>
         <p className="text">You already have an account? <Link to="/sign-in" className="primary-text">Sign in</Link></p>
       </form>
+      {(token)? <Navigate to="/"/>: null}
     </div>
   )
 }

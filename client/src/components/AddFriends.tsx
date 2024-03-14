@@ -12,9 +12,14 @@ const AddFriends = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/user/users")
+      .get(`http://localhost:8080/user/suggestFriends?username=${localStorage.getItem("myUserName")}`,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("myToken")}`,
+        },
+      })
       .then((res) => {
         setUsers(res.data);
+        console.log(res.data);
       })
       .catch((err) => {
         setError(err);

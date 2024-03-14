@@ -3,25 +3,23 @@ import Menu from "../components/Menu"
 import Logo from "../components/Logo"
 import SearchBar from "../components/SearchBar"
 import Greeting from "../components/Greeting"
-import profile from "../assets/profile.png"
-import background from "../assets/behindGrad.jpg"
 import AddFriends from "../components/AddFriends"
 
 
 const RootLayout = () => {
 
-  const isAuthenticated = true
+  const token = localStorage.getItem('myToken');
   return (
     <>
       {
-        isAuthenticated?
+        (token)?
         (
           
           <section>
             <header className="header">
               <Logo style='horizontal-logo' Name='Expium'/> 
               <SearchBar/>
-              <Greeting MyName="Erik" MyPfp={profile}/>
+              <Greeting/>
             </header>
             <div className="layout">
               
